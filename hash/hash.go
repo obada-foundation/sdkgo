@@ -13,6 +13,7 @@ type Hash struct {
 	dec uint64
 }
 
+// NewHash ...
 func NewHash(value string) (Hash, error) {
 	var hash Hash
 
@@ -36,6 +37,7 @@ func NewHash(value string) (Hash, error) {
 	return hash, nil
 }
 
+// hashToDec ...
 func hashToDec(hash string) (uint64, error) {
 	match, err := regexp.MatchString(`^[0-9a-fA-F]+$`, hash)
 
@@ -60,10 +62,12 @@ func hashToDec(hash string) (uint64, error) {
 	return decimal, nil
 }
 
+// GetHash ...
 func (h *Hash) GetHash() string {
 	return h.hash
 }
 
+// GetDec ...
 func (h *Hash) GetDec() uint64 {
 	return h.dec
 }
