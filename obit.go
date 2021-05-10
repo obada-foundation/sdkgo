@@ -9,8 +9,8 @@ type Obit struct {
 	serialNumberHash properties.SerialNumberHash
 	manufacturer     properties.Manufacturer
 	partNumber       properties.PartNumber
-	ownerDid         string
-	obdDid           string
+	ownerDid         properties.OwnerDid
+	obdDid           properties.ObdDid
 	metadata         string
 	structuredData   string
 	documents        string

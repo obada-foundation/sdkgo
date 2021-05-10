@@ -18,7 +18,7 @@ func NewSdk(log *log.Logger, debug bool) (*Sdk, error)  {
 	}, nil
 }
 
-func (sdk *Sdk) NewObit(serialNumberHash string, manufacturer string, partNumber string) (Obit, error) {
+func (sdk *Sdk) NewObit(serialNumberHash string, manufacturer string, partNumber string, ownerDid string, obdDid string) (Obit, error) {
 	var o Obit
 
 	sdk.Debug(fmt.Sprintf("NewObit(%q, %q, %q)", serialNumberHash, manufacturer, partNumber))
@@ -27,6 +27,8 @@ func (sdk *Sdk) NewObit(serialNumberHash string, manufacturer string, partNumber
 	m, err := properties.NewManufacturer(manufacturer)
 	pn, err := properties.NewPartNumber(partNumber)
 	id, err := properties.NewObitId(snh, m, pn)
+	od, err := properties.NewOwnerDid(ownerDid)
+	obd, err := properties.NewObdDid(obdDid)
 
 	if err != nil {
 		return o, err
@@ -36,6 +38,8 @@ func (sdk *Sdk) NewObit(serialNumberHash string, manufacturer string, partNumber
 	o.serialNumberHash = snh
 	o.manufacturer = m
 	o.partNumber = pn
+	o.ownerDid = od
+	o.obdDid = obd
 
 	return o, nil
 }
