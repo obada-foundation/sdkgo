@@ -8,17 +8,17 @@ import (
 
 type Sdk struct {
 	logger *log.Logger
-	debug bool
+	debug  bool
 }
 
-func NewSdk(log *log.Logger, debug bool) (*Sdk, error)  {
+func NewSdk(log *log.Logger, debug bool) (*Sdk, error) {
 	return &Sdk{
 		logger: log,
-		debug: debug,
+		debug:  debug,
 	}, nil
 }
 
-func (sdk *Sdk) NewObit(serialNumberHash string, manufacturer string, partNumber string, ownerDid string, obdDid string) (Obit, error) {
+func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	var o Obit
 
 	sdk.Debug(fmt.Sprintf("NewObit(%q, %q, %q)", serialNumberHash, manufacturer, partNumber))
@@ -93,5 +93,3 @@ func (sdk *Sdk) Debug(message string) {
 		}
 	}
 }
-
-

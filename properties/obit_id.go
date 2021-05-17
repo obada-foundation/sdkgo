@@ -12,7 +12,7 @@ type ObitId struct {
 	hash hash.Hash
 }
 
-func NewObitId(snh SerialNumberHash, m Manufacturer, pn PartNumber) (ObitId, error) {
+func NewObitId(snh StringProperty, m StringProperty, pn StringProperty) (ObitId, error) {
 	var id ObitId
 
 	snhHash := snh.GetHash()
