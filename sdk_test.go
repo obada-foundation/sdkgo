@@ -19,7 +19,15 @@ func TestSdk_NewObit(t *testing.T) {
 		t.Fatal("Cannot initialize OBADA SDK")
 	}
 
-	_, err = sdk.NewObit("s", "s", "s", "did:obada:owner:123456", "did:obada:obd:1234")
+	var dto ObitDto
+
+	dto.serialNumberHash = "s"
+	dto.manufacturer = "s"
+	dto.partNumber = "s"
+	dto.ownerDid = "did:obada:owner:123456"
+	dto.obdDid = "did:obada:obd:1234"
+
+	_, err = sdk.NewObit(dto)
 
 	if err != nil {
 
@@ -33,7 +41,13 @@ func TestSdk_NewObitId(t *testing.T) {
 		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
 	}
 
-	_, err = sdk.NewObit("serialnimhash", "sony", "pn12345", "did:obada:owner:123456", "did:obada:obd:1234")
+	dto := ObitIdDto{
+		serialNumberHash: "serialnimhash",
+		manufacturer:     "sony",
+		partNumber:       "pn12345",
+	}
+
+	_, err = sdk.NewObitId(dto)
 
 	if err != nil {
 		t.Fatalf("Cannot create ObitId. %s", err)

@@ -1,61 +1,33 @@
 package properties
 
 import (
-"crypto/sha256"
-"encoding/hex"
 "github.com/obada-protocol/sdk-go/hash"
 "testing"
 )
 
-func TestSerialNumberHash(t *testing.T) {
+func TestNewStringProperty(t *testing.T) {
 	testCases := []struct {
 		arg string
 	}{
 		{"serial number"},
 		{"ML6843FO"},
+		{"did:obada:obd:1234"},
+		{"2y5zjyCj"},
 	}
 
 	for _, tc := range testCases {
 		t.Logf("Testing: %q", tc.arg)
 
-		h := sha256.New()
-		_, err := h.Write([]byte(tc.arg))
+		m, _ := NewStringProperty(tc.arg)
 
-		if err != nil {
-			t.Errorf("Cannot get example sha256 from given %q value. %q", tc.arg, err)
+		if m.GetValue() != tc.arg {
+			t.Fatalf("Expecting to get %q but got %q", tc.arg, m.GetValue())
 		}
 
-		serialNumberHash := hex.EncodeToString(h.Sum(nil))
+		hash, _ := hash.NewHash(tc.arg)
 
-		snh, _ := NewSerialNumberHash(serialNumberHash)
-
-		if snh.GetValue() != serialNumberHash {
-			t.Fatalf("Expecting to get %q but got %q", serialNumberHash, snh.GetValue())
-		}
-
-		hash, _ := hash.NewHash(serialNumberHash)
-
-		if snh.GetHash() != hash {
-			t.Fatalf("Expecting to get %v but got %v", hash, snh.GetHash())
-		}
-	}
-}
-
-func TestNewSerialNumberHashErrors(t *testing.T) {
-	testCases := []struct {
-		arg       string
-		wantError string
-	}{
-		{"", "serial number hash must be a valid SHA256 hash"},
-	}
-
-	for _, tc := range testCases {
-		t.Logf("Testing: %q", tc.arg)
-
-		_, err := NewSerialNumberHash(tc.arg)
-
-		if err.Error() != tc.wantError {
-			t.Errorf("NewSerialNumberHash(%q) must return error %q, but received %q", tc.arg, tc.wantError, err.Error())
+		if m.GetHash() != hash {
+			t.Fatalf("Expecting to get %v but got %v", hash, m.GetHash())
 		}
 	}
 }

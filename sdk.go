@@ -2,80 +2,69 @@ package sdk_go
 
 import (
 	"fmt"
-	"github.com/obada-protocol/sdk-go/properties"
 	"log"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/obada-protocol/sdk-go/properties"
 )
 
+var validate *validator.Validate
+
 type Sdk struct {
-	logger *log.Logger
-	debug  bool
+	logger   *log.Logger
+	debug    bool
+	validate *validator.Validate
 }
 
 func NewSdk(log *log.Logger, debug bool) (*Sdk, error) {
 	return &Sdk{
-		logger: log,
-		debug:  debug,
+		logger:   log,
+		debug:    debug,
+		validate: validator.New(),
 	}, nil
 }
 
 func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	var o Obit
 
-	sdk.Debug(fmt.Sprintf("NewObit(%q, %q, %q)", serialNumberHash, manufacturer, partNumber))
+	err := sdk.validate.Struct(dto)
+	if err != nil {
+		return o, err
+	}
 
-	snh, err := properties.NewSerialNumberHash(serialNumberHash)
-	m, err := properties.NewManufacturer(manufacturer)
-	pn, err := properties.NewPartNumber(partNumber)
-	id, err := properties.NewObitId(snh, m, pn)
-	od, err := properties.NewOwnerDid(ownerDid)
-	obd, err := properties.NewObdDid(obdDid)
+	serialNumberProp, err := properties.NewStringProperty(dto.GetSerialNumberHash())
+	manufacturerProp, err := properties.NewStringProperty(dto.GetManufacturer())
+	pnProp, err := properties.NewStringProperty(dto.GetPartNumber())
 
 	if err != nil {
 		return o, err
 	}
 
-	o.obitId = id
-	o.serialNumberHash = snh
-	o.manufacturer = m
-	o.partNumber = pn
-	o.ownerDid = od
-	o.obdDid = obd
+	obitId, err := properties.NewObitId(serialNumberProp, manufacturerProp, pnProp)
+
+	if err != nil {
+		return o, err
+	}
+
+	o.obitId = obitId
 
 	return o, nil
 }
 
-func (sdk *Sdk) NewObitId(serialNumberHash string, manufacturer string, partNumber string) (properties.ObitId, error) {
+func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitId, error) {
 	var obitId properties.ObitId
 
-	sdk.Debug(fmt.Sprintf("NewObit(%q, %q, %q)", serialNumberHash, manufacturer, partNumber))
+	sdk.Debug(fmt.Sprintf("NewObitId(%q, %q, %q)", dto.GetSerialNumberHash(), dto.GetManufacturer(), dto.GetPartNumber()))
 
-	snh, err := properties.NewSerialNumberHash(serialNumberHash)
-
-	if err != nil {
-		return obitId, err
-	}
-
-	snhh := snh.GetHash()
-
-	sdk.Debug(fmt.Sprintf("serialNumberHash = %q :: hash = %q :: decHash = %q", snh.GetValue(), snhh.GetHash(), snhh.GetDec()))
+	serialNumberProp, err := properties.NewStringProperty(dto.GetSerialNumberHash())
+	manufacturerProp, err := properties.NewStringProperty(dto.GetManufacturer())
+	pnProp, err := properties.NewStringProperty(dto.GetPartNumber())
 
 	if err != nil {
 		return obitId, err
 	}
 
-	m, err := properties.NewManufacturer(manufacturer)
-
-	if err != nil {
-		return obitId, err
-	}
-
-	pn, err := properties.NewPartNumber(partNumber)
-
-	if err != nil {
-		return obitId, err
-	}
-
-	obitId, err = properties.NewObitId(snh, m, pn)
+	obitId, err = properties.NewObitId(serialNumberProp, manufacturerProp, pnProp)
 
 	if err != nil {
 		return obitId, err

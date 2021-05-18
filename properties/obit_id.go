@@ -12,12 +12,12 @@ type ObitId struct {
 	hash hash.Hash
 }
 
-func NewObitId(snh StringProperty, m StringProperty, pn StringProperty) (ObitId, error) {
+func NewObitId(serialNumberHash StringProperty, manufacturer StringProperty, partNumber StringProperty) (ObitId, error) {
 	var id ObitId
 
-	snhHash := snh.GetHash()
-	mh := m.GetHash()
-	pnh := pn.GetHash()
+	snhHash := serialNumberHash.GetHash()
+	mh := manufacturer.GetHash()
+	pnh := partNumber.GetHash()
 
 	h, err := hash.NewHash(fmt.Sprintf("%x", snhHash.GetDec() + mh.GetDec() + pnh.GetDec()))
 
