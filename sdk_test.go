@@ -1,6 +1,8 @@
 package sdk_go
 
 import (
+	"fmt"
+	"github.com/go-playground/validator/v10"
 	"testing"
 )
 
@@ -21,9 +23,9 @@ func TestSdk_NewObit(t *testing.T) {
 
 	var dto ObitDto
 
-	dto.serialNumberHash = "s"
-	dto.manufacturer = "s"
-	dto.partNumber = "s"
+	dto.SerialNumberHash = "s"
+	dto.Manufacturer = "s"
+	dto.PartNumber = "s"
 	dto.ownerDid = "did:obada:owner:123456"
 	dto.obdDid = "did:obada:obd:1234"
 
@@ -42,14 +44,34 @@ func TestSdk_NewObitId(t *testing.T) {
 	}
 
 	dto := ObitIdDto{
-		serialNumberHash: "serialnimhash",
-		manufacturer:     "sony",
-		partNumber:       "pn12345",
+		SerialNumberHash: "serialnumberhash",
+		Manufacturer:     "sony",
+		PartNumber:       "pn12345",
 	}
 
 	_, err = sdk.NewObitId(dto)
 
 	if err != nil {
 		t.Fatalf("Cannot create ObitId. %s", err)
+	}
+}
+
+func TestSdk_NewObitIdDtoValidation(t *testing.T) {
+	sdk, err := NewSdk(nil, true)
+
+	if err != nil {
+		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
+	}
+
+	var dto ObitIdDto
+
+	fmt.Println(len(dto.SerialNumberHash))
+
+	_, err = sdk.NewObitId(dto)
+
+	errs := err.(validator.ValidationErrors)
+
+	for err := range errs {
+		fmt.Println(errs[err])
 	}
 }

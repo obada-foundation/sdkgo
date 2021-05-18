@@ -8,8 +8,6 @@ import (
 	"github.com/obada-protocol/sdk-go/properties"
 )
 
-var validate *validator.Validate
-
 type Sdk struct {
 	logger   *log.Logger
 	debug    bool
@@ -17,11 +15,18 @@ type Sdk struct {
 }
 
 func NewSdk(log *log.Logger, debug bool) (*Sdk, error) {
+
 	return &Sdk{
 		logger:   log,
 		debug:    debug,
-		validate: validator.New(),
+		validate: initializeValidator(),
 	}, nil
+}
+
+func initializeValidator() *validator.Validate {
+	v := validator.New()
+
+	return v
 }
 
 func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
@@ -32,9 +37,9 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	serialNumberProp, err := properties.NewStringProperty(dto.GetSerialNumberHash())
-	manufacturerProp, err := properties.NewStringProperty(dto.GetManufacturer())
-	pnProp, err := properties.NewStringProperty(dto.GetPartNumber())
+	serialNumberProp, err := properties.NewStringProperty(dto.SerialNumberHash)
+	manufacturerProp, err := properties.NewStringProperty(dto.Manufacturer)
+	pnProp, err := properties.NewStringProperty(dto.PartNumber)
 
 	if err != nil {
 		return o, err
@@ -54,11 +59,16 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitId, error) {
 	var obitId properties.ObitId
 
-	sdk.Debug(fmt.Sprintf("NewObitId(%q, %q, %q)", dto.GetSerialNumberHash(), dto.GetManufacturer(), dto.GetPartNumber()))
+	sdk.Debug(fmt.Sprintf("NewObitId(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber))
 
-	serialNumberProp, err := properties.NewStringProperty(dto.GetSerialNumberHash())
-	manufacturerProp, err := properties.NewStringProperty(dto.GetManufacturer())
-	pnProp, err := properties.NewStringProperty(dto.GetPartNumber())
+	err := sdk.validate.Struct(dto)
+	if err != nil {
+		return obitId, err
+	}
+
+	serialNumberProp, err := properties.NewStringProperty(dto.SerialNumberHash)
+	manufacturerProp, err := properties.NewStringProperty(dto.Manufacturer)
+	pnProp, err := properties.NewStringProperty(dto.PartNumber)
 
 	if err != nil {
 		return obitId, err
