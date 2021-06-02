@@ -1,8 +1,8 @@
 package properties
 
 import (
-"github.com/obada-protocol/sdk-go/hash"
-"testing"
+	"github.com/obada-protocol/sdk-go/hash"
+	"testing"
 )
 
 func TestNewStringProperty(t *testing.T) {
@@ -31,4 +31,3 @@ func TestNewStringProperty(t *testing.T) {
 		}
 	}
 }
-

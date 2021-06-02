@@ -25,10 +25,10 @@ func NewStringProperty(value string) (StringProperty, error) {
 	return sp, nil
 }
 
-func (sp *StringProperty) GetValue() string {
+func (sp StringProperty) GetValue() string {
 	return sp.value
 }
 
-func (sp *StringProperty) GetHash() hash.Hash {
+func (sp StringProperty) GetHash() hash.Hash {
 	return sp.hash
 }

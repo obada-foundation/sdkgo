@@ -10,7 +10,7 @@ import (
 
 type Hash struct {
 	hash string
-	dec uint64
+	dec  uint64
 }
 
 // NewHash ...
@@ -63,11 +63,11 @@ func hashToDec(hash string) (uint64, error) {
 }
 
 // GetHash ...
-func (h *Hash) GetHash() string {
+func (h Hash) GetHash() string {
 	return h.hash
 }
 
 // GetDec ...
-func (h *Hash) GetDec() uint64 {
+func (h Hash) GetDec() uint64 {
 	return h.dec
 }

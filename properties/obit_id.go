@@ -19,7 +19,7 @@ func NewObitId(serialNumberHash StringProperty, manufacturer StringProperty, par
 	mh := manufacturer.GetHash()
 	pnh := partNumber.GetHash()
 
-	h, err := hash.NewHash(fmt.Sprintf("%x", snhHash.GetDec() + mh.GetDec() + pnh.GetDec()))
+	h, err := hash.NewHash(fmt.Sprintf("%x", snhHash.GetDec()+mh.GetDec()+pnh.GetDec()))
 
 	if err != nil {
 		return id, fmt.Errorf("cannot create obit id: %w", err)
@@ -28,10 +28,14 @@ func NewObitId(serialNumberHash StringProperty, manufacturer StringProperty, par
 	hashStr := h.GetHash()
 
 	id.hash = h
-	id.did  = fmt.Sprintf("did:obada:%s", hashStr)
-	id.usn  = base58.Encode([]byte(hashStr))[:8]
+	id.did = fmt.Sprintf("did:obada:%s", hashStr)
+	id.usn = base58.Encode([]byte(hashStr))[:8]
 
 	return id, nil
+}
+
+func (id *ObitId) GetHash() hash.Hash {
+	return id.hash
 }
 
 func (id *ObitId) GetDid() string {
