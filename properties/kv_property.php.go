@@ -2,7 +2,7 @@ package properties
 
 import (
 	"fmt"
-	"github.com/obada-protocol/sdk-go/hash"
+	"github.com/obada-foundation/sdk-go/hash"
 	"strconv"
 )
 
