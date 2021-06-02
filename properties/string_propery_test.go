@@ -1,7 +1,7 @@
 package properties
 
 import (
-	"github.com/obada-protocol/sdk-go/hash"
+	"github.com/obada-foundation/sdk-go/hash"
 	"testing"
 )
 

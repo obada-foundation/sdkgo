@@ -1,7 +1,7 @@
 package sdk_go
 
 import (
-	"github.com/obada-protocol/sdk-go/properties"
+	"github.com/obada-foundation/sdk-go/properties"
 	"time"
 )
 

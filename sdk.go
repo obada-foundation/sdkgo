@@ -2,11 +2,11 @@ package sdk_go
 
 import (
 	"fmt"
-	"github.com/obada-protocol/sdk-go/hash"
+	"github.com/obada-foundation/sdk-go/hash"
 	"log"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/obada-protocol/sdk-go/properties"
+	"github.com/obada-foundation/sdk-go/properties"
 )
 
 type Sdk struct {
