@@ -13,9 +13,9 @@ func TestNewObitId(t *testing.T) {
 
 	serialNumberHash := hex.EncodeToString(h.Sum(nil))
 
-	snh, err := NewSerialNumberHash(serialNumberHash)
-	m, err := NewManufacturer("manufacturer")
-	pn, err := NewPartNumber("part number")
+	snh, err := NewStringProperty(serialNumberHash)
+	m, err := NewStringProperty("manufacturer")
+	pn, err := NewStringProperty("part number")
 
 	if err != nil {
 		t.Fatalf(err.Error())

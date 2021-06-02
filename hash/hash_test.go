@@ -7,9 +7,9 @@ func TestErrorsWhenTryingToCreateHash(t *testing.T) {
 }
 
 func TestObadaHashCreation(t *testing.T) {
-	testCases := []struct{
-		arg string
-		wantSha256 string
+	testCases := []struct {
+		arg         string
+		wantSha256  string
 		wantDecimal uint64
 	}{
 		{"", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", 3820012610},
@@ -32,13 +32,13 @@ func TestObadaHashCreation(t *testing.T) {
 
 }
 
-func TestErrorsWhenTryingConvertNonHexToDec(t *testing.T)  {
-	testCases := []struct{
-		arg string
+func TestErrorsWhenTryingConvertNonHexToDec(t *testing.T) {
+	testCases := []struct {
+		arg       string
 		wantError string
 	}{
-		{"not","given string string \"not\" is not valid hex"},
-		{"not valid","given string string \"not valid\" is not valid hex"},
+		{"not", "given string string \"not\" is not valid hex"},
+		{"not valid", "given string string \"not valid\" is not valid hex"},
 	}
 
 	for _, tc := range testCases {
@@ -56,9 +56,9 @@ func TestErrorsWhenTryingConvertNonHexToDec(t *testing.T)  {
 	}
 }
 
-func TestHashToDecimalConversion(t *testing.T)  {
-	testCases := []struct{
-		arg string
+func TestHashToDecimalConversion(t *testing.T) {
+	testCases := []struct {
+		arg  string
 		want uint64
 	}{
 		{"0000", 0},
