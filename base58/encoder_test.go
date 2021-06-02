@@ -7,7 +7,7 @@ package base58_test
 import (
 	"bytes"
 	"encoding/hex"
-	"github.com/obada-protocol/sdk-go/base58"
+	"github.com/obada-foundation/sdk-go/base58"
 	"testing"
 )
 
