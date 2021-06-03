@@ -32,54 +32,105 @@ func initializeValidator() *validator.Validate {
 // NewObit s
 func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	var o Obit
+	o.debug = sdk.debug
+	o.logger = sdk.logger
 
 	err := sdk.validate.Struct(dto)
 	if err != nil {
 		return o, err
 	}
 
-	sdk.Debug(fmt.Sprintf("NewObit(%v)", dto))
+	if sdk.debug {
+		sdk.logger.Printf("NewObit(%v)", dto)
+	}
 
-	serialNumberProp, err := properties.NewStringProperty(dto.SerialNumberHash)
+	snProp, err := properties.NewStringProperty(dto.SerialNumberHash, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
 	}
 
-	sdk.Debug(fmt.Sprintf("Hash(%q) => %q", serialNumberProp.GetValue(), serialNumberProp.GetHash().GetHash()))
-
-	manufacturerProp, err := properties.NewStringProperty(dto.Manufacturer)
+	manufacturerProp, err := properties.NewStringProperty(dto.Manufacturer, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
 	}
 
-	sdk.Debug(fmt.Sprintf("Hash(%q) => %q", manufacturerProp.GetValue(), manufacturerProp.GetHash().GetHash()))
-
-	pnProp, err := properties.NewStringProperty(dto.PartNumber)
+	pnProp, err := properties.NewStringProperty(dto.PartNumber, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
 	}
 
-	sdk.Debug(fmt.Sprintf("Hash(%q) => %q", pnProp.GetValue(), pnProp.GetHash().GetHash()))
-
-	obitId, err := properties.NewObitId(serialNumberProp, manufacturerProp, pnProp)
+	obdDidProp, err := properties.NewStringProperty(dto.ObdDid, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
 	}
 
-	o.obitId = obitId
-	o.serialNumberHash = serialNumberProp
+	ownerDidProp, err := properties.NewStringProperty(dto.OwnerDid, sdk.logger, sdk.debug)
+
+	if err != nil {
+		return o, err
+	}
+
+	statusProp, err := properties.NewStatusProperty(dto.Status, sdk.logger, sdk.debug)
+
+	if err != nil {
+		return o, err
+	}
+
+	obitIdProp, err := properties.NewObitIdProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
+
+	if err != nil {
+		return o, err
+	}
+
+	modifiedAt, err := properties.NewTimeProperty(dto.ModifiedAt, sdk.logger, sdk.debug)
+
+	if err != nil {
+		return o, err
+	}
+
+	metadataProp, err := properties.NewMapProperty(dto.Matadata, sdk.logger, sdk.debug)
+
+	if err != nil {
+		return o, err
+	}
+
+	strctDataProp, err := properties.NewMapProperty(dto.StructureData, sdk.logger, sdk.debug)
+
+	if err != nil {
+		return o, err
+	}
+
+	documentsProp, err := properties.NewMapProperty(dto.Documents, sdk.logger, sdk.debug)
+
+	if err != nil {
+		return o, err
+	}
+
+	o.obitId = obitIdProp
+	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
 	o.partNumber = pnProp
+	o.obdDid = obdDidProp
+	o.ownerDid = ownerDidProp
+	o.status = statusProp
+	o.metadata = metadataProp
+	o.structureData = strctDataProp
+	o.documents = documentsProp
+	o.modifiedAt = modifiedAt
 
 	return o, nil
 }
 
 func (o Obit) GetRootHash() (hash.Hash, error) {
 	var rootHash hash.Hash
+
+	if o.debug {
+		o.logger.Println("\n\nObit root hash calculation")
+	}
 
 	sum := o.obitId.GetHash().GetDec() +
 		o.serialNumberHash.GetHash().GetDec() +
@@ -93,10 +144,34 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 		o.modifiedAt.GetHash().GetDec() +
 		o.status.GetHash().GetDec()
 
-	rootHash, err := hash.NewHash(fmt.Sprintf("%x", sum))
+	if o.debug {
+		o.logger.Println(fmt.Sprintf(
+			"(%d + %d + %d + %d + %d + %d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
+			o.obitId.GetHash().GetDec(),
+			o.serialNumberHash.GetHash().GetDec(),
+			o.manufacturer.GetHash().GetDec(),
+			o.partNumber.GetHash().GetDec(),
+			o.ownerDid.GetHash().GetDec(),
+			o.obdDid.GetHash().GetDec(),
+			o.metadata.GetHash().GetDec(),
+			o.structureData.GetHash().GetDec(),
+			o.documents.GetHash().GetDec(),
+			o.modifiedAt.GetHash().GetDec(),
+			o.status.GetHash().GetDec(),
+			sum,
+			sum,
+			fmt.Sprintf("%x", sum),
+		))
+	}
+
+	rootHash, err := hash.NewHash(fmt.Sprintf("%x", sum), o.logger, o.debug)
 
 	if err != nil {
 		return rootHash, err
+	}
+
+	if o.debug {
+		o.logger.Printf("RootHash(%v) -> %q", o, rootHash.GetHash())
 	}
 
 	return rootHash, nil
@@ -107,7 +182,7 @@ func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitId, error) {
 	var obitId properties.ObitId
 
 	if sdk.debug {
-		sdk.Debug(fmt.Sprintf("NewObitId(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber))
+		sdk.logger.Printf("NewObitId(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber)
 	}
 
 	err := sdk.validate.Struct(dto)
@@ -115,78 +190,29 @@ func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitId, error) {
 		return obitId, err
 	}
 
-	snProp, err := properties.NewStringProperty(dto.SerialNumberHash)
+	snProp, err := properties.NewStringProperty(dto.SerialNumberHash, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return obitId, err
 	}
 
-	snPropHash := snProp.GetHash()
-
-	if sdk.debug {
-		sdk.Debug(fmt.Sprintf("Hash(%q) -> Hash2Dec(%q) -> %d", snProp.GetValue(), snPropHash.GetHash(), snPropHash.GetDec()))
-	}
-
-	mnProp, err := properties.NewStringProperty(dto.Manufacturer)
+	mnProp, err := properties.NewStringProperty(dto.Manufacturer, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return obitId, err
 	}
 
-	mnPropHash := mnProp.GetHash()
-
-	if sdk.debug {
-		sdk.Debug(fmt.Sprintf("Hash(%q) -> Hash2Dec(%q) -> %d", mnProp.GetValue(), mnPropHash.GetHash(), mnPropHash.GetDec()))
-	}
-
-	pnProp, err := properties.NewStringProperty(dto.PartNumber)
+	pnProp, err := properties.NewStringProperty(dto.PartNumber, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return obitId, err
 	}
 
-	pnPropHash := pnProp.GetHash()
-
-	if sdk.debug {
-		sdk.Debug(fmt.Sprintf("Hash(%q) -> Hash2Dec(%q) -> %d", pnProp.GetValue(), pnPropHash.GetHash(), pnPropHash.GetDec()))
-	}
-
-	obitId, err = properties.NewObitId(snProp, mnProp, pnProp)
+	obitId, err = properties.NewObitIdProperty(snProp, mnProp, pnProp, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return obitId, err
-	}
-
-	if sdk.debug {
-		sum := snPropHash.GetDec() + mnPropHash.GetDec() + pnPropHash.GetDec()
-
-		sdk.Debug(
-			fmt.Sprintf("(%d + %d + %d) -> %d",
-				snPropHash.GetDec(),
-				mnPropHash.GetDec(),
-				pnPropHash.GetDec(),
-				sum,
-			))
-
-		dec2Hex := fmt.Sprintf("%x", sum)
-		dec2HexHash, _ := hash.NewHash(dec2Hex)
-
-		sdk.Debug(fmt.Sprintf("Dec2Hex(%d) -> %s -> Hash(%s) -> %s", sum, dec2Hex, dec2Hex,dec2HexHash.GetHash()))
-
-		sdk.Debug(fmt.Sprintf("Hash : %s", obitId.GetHash().GetHash()))
-		sdk.Debug(fmt.Sprintf("Did : %s", obitId.GetDid()))
-		sdk.Debug(fmt.Sprintf("Usn : Base58(%s) -> %s", obitId.GetHash().GetHash(), obitId.GetUsn()))
 	}
 
 	return obitId, nil
-}
-
-func (sdk *Sdk) Debug(message string) {
-	if sdk.debug {
-		if sdk.logger != nil {
-			sdk.logger.Println(message)
-		} else {
-			log.Println(message)
-		}
-	}
 }

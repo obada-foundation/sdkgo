@@ -18,7 +18,11 @@ func TestNewSdk(t *testing.T) {
 }
 
 func TestSdk_NewObit(t *testing.T) {
-	sdk, err := NewSdk(nil, false)
+	var logStr bytes.Buffer
+
+	log := log.New(&logStr, "TESTING SDK :: ", 0)
+
+	sdk, err := NewSdk(log, true)
 
 	if err != nil {
 		t.Fatal("Cannot initialize OBADA SDK")
@@ -38,7 +42,7 @@ func TestSdk_NewObit(t *testing.T) {
 		"foo": "bar",
 	}
 	dto.Documents = map[string]string{}
-	dto.Status = StatusStolen
+	dto.Status = "STOLEN"
 	dto.ModifiedAt = time.Now()
 
 	_, err = sdk.NewObit(dto)
@@ -76,7 +80,7 @@ func TestSdk_NewObitId(t *testing.T) {
 }
 
 func TestSdk_ObitIdDtoValidation(t *testing.T) {
-	sdk, err := NewSdk(nil, true)
+	sdk, err := NewSdk(nil, false)
 
 	if err != nil {
 		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
@@ -102,8 +106,9 @@ func TestSdk_RootHash(t *testing.T) {
 	dto.SerialNumberHash = "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03"
 	dto.Manufacturer = "Sony"
 	dto.PartNumber = "PN123456"
-	dto.ObdDid = ""
+	dto.ObdDid = "did:obada:obd:1234"
 	dto.OwnerDid = "did:obada:owner:123456"
+	dto.Status = "STOLEN"
 
 	date, err := time.Parse("2006-01-02", "2021-07-01")
 
