@@ -22,13 +22,13 @@ type ObitIdDto struct {
 
 type ObitDto struct {
 	ObitIdDto
-	OwnerDid      string `validate:"required"`
-	ObdDid        string
-	Matadata      map[string]string
-	StructureData map[string]string
-	Documents     map[string]string
-	ModifiedAt    time.Time
-	Status        string
+	OwnerDid       string `validate:"required"`
+	ObdDid         string
+	Matadata       map[string]string
+	StructuredData map[string]string
+	Documents      map[string]string
+	ModifiedAt     time.Time
+	Status         string
 }
 
 type Obit struct {
@@ -39,10 +39,10 @@ type Obit struct {
 	ownerDid         properties.StringProperty
 	obdDid           properties.StringProperty
 	metadata         properties.KvProperty
-	structureData    properties.KvProperty
+	structuredData   properties.KvProperty
 	documents        properties.KvProperty
 	modifiedAt       properties.TimeProperty
 	status           properties.StatusProperty
-	debug bool
-	logger *log.Logger
+	debug            bool
+	logger           *log.Logger
 }
