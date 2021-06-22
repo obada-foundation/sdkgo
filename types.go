@@ -13,12 +13,14 @@ const StatusDisposed Status = "DISPOSED"
 const StatusStolen Status = "STOLEN"
 const DisabledByOwner Status = "DISABLED_BY_OWNER"
 
+// ObitIdDto todo add description
 type ObitIdDto struct {
 	SerialNumberHash string `validate:"required"`
 	Manufacturer     string `validate:"required"`
 	PartNumber       string `validate:"required"`
 }
 
+// ObitDto todo add description
 type ObitDto struct {
 	ObitIdDto
 	OwnerDid       string `validate:"required"`
@@ -30,6 +32,7 @@ type ObitDto struct {
 	Status         string
 }
 
+// Obit todo add description
 type Obit struct {
 	obitId           properties.ObitId
 	serialNumberHash properties.StringProperty
