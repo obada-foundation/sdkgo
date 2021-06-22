@@ -17,6 +17,7 @@ type Sdk struct {
 	validate *validator.Validate
 }
 
+// NewSdk creates a new obada SDK instance
 func NewSdk(log *log.Logger, debug bool) (*Sdk, error) {
 	return &Sdk{
 		logger:   log,
@@ -37,7 +38,7 @@ func validateMinModifiedOn(fl validator.FieldLevel) bool {
 	return fl.Field().Int() >= obadaReleaseDateUTC
 }
 
-// NewObit s
+// NewObit creates new obit
 func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	var o Obit
 	o.debug = sdk.debug
@@ -133,6 +134,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	return o, nil
 }
 
+// GetRootHash returns obit root hash
 func (o Obit) GetRootHash() (hash.Hash, error) {
 	var rootHash hash.Hash
 
@@ -185,8 +187,8 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 	return rootHash, nil
 }
 
-// NewObitId c
-func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitID, error) {
+// NewObitID creates new obit id
+func (sdk *Sdk) NewObitID(dto ObitIDDto) (properties.ObitID, error) {
 	var obitId properties.ObitID
 
 	if sdk.debug {

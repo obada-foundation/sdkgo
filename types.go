@@ -13,8 +13,8 @@ const StatusDisposed Status = "DISPOSED"
 const StatusStolen Status = "STOLEN"
 const DisabledByOwner Status = "DISABLED_BY_OWNER"
 
-// ObitIdDto todo add description
-type ObitIdDto struct {
+// ObitIDDto todo add description
+type ObitIDDto struct {
 	SerialNumberHash string `validate:"required"`
 	Manufacturer     string `validate:"required"`
 	PartNumber       string `validate:"required"`
@@ -22,7 +22,7 @@ type ObitIdDto struct {
 
 // ObitDto todo add description
 type ObitDto struct {
-	ObitIdDto
+	ObitIDDto
 	OwnerDid       string `validate:"required"`
 	ObdDid         string
 	Matadata       map[string]string

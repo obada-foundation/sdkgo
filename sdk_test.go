@@ -63,13 +63,13 @@ func TestSdk_NewObitId(t *testing.T) {
 		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
 	}
 
-	dto := ObitIdDto{
+	dto := ObitIDDto{
 		SerialNumberHash: "serialnumberhash",
 		Manufacturer:     "sony",
 		PartNumber:       "pn12345",
 	}
 
-	_, err = sdk.NewObitId(dto)
+	_, err = sdk.NewObitID(dto)
 
 	if err != nil {
 		fmt.Println(logStr.String())
@@ -86,11 +86,11 @@ func TestSdk_ObitIdDtoValidation(t *testing.T) {
 		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
 	}
 
-	var dto ObitIdDto
+	var dto ObitIDDto
 
 	fmt.Println(len(dto.SerialNumberHash))
 
-	_, err = sdk.NewObitId(dto)
+	_, err = sdk.NewObitID(dto)
 
 	errs := err.(validator.ValidationErrors)
 
