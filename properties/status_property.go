@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+// StatusProperty ...
 type StatusProperty struct {
 	value string
 	hash  hash.Hash

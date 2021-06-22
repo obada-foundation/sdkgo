@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// ObitID ...
 type ObitID struct {
 	usn  string
 	did  string

@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+// StringProperty ...
 type StringProperty struct {
 	value string
 	hash  hash.Hash
