@@ -9,12 +9,13 @@ import (
 	"strconv"
 )
 
+// Hash struct represent string value as a hash or as a decimal
 type Hash struct {
 	hash string
 	dec  uint64
 }
 
-// NewHash ...
+// NewHash creates a new OBADA hash
 func NewHash(value string, log *log.Logger, debug bool) (Hash, error) {
 	var hash Hash
 	var debugStr string
@@ -44,7 +45,7 @@ func NewHash(value string, log *log.Logger, debug bool) (Hash, error) {
 	return hash, nil
 }
 
-// hashToDec ...
+// hashToDec convert hash which is hex string into decimal
 func hashToDec(hash string, log *log.Logger, debug bool) (uint64, error) {
 	match, err := regexp.MatchString(`^[0-9a-fA-F]+$`, hash)
 	partialHash := hash
@@ -74,12 +75,12 @@ func hashToDec(hash string, log *log.Logger, debug bool) (uint64, error) {
 	return decimal, nil
 }
 
-// GetHash ...
+// GetHash returns hash
 func (h Hash) GetHash() string {
 	return h.hash
 }
 
-// GetDec ...
+// GetDec returns decimal value
 func (h Hash) GetDec() uint64 {
 	return h.dec
 }
