@@ -6,11 +6,13 @@ import (
 	"strconv"
 )
 
+// IntProperty hosts hash and value of int property
 type IntProperty struct {
 	value int64
 	hash  hash.Hash
 }
 
+// NewIntProperty creates a new obit property from integer value
 func NewIntProperty(int int64, log *log.Logger, debug bool) (IntProperty, error) {
 	var ip IntProperty
 
@@ -30,10 +32,12 @@ func NewIntProperty(int int64, log *log.Logger, debug bool) (IntProperty, error)
 	return ip, nil
 }
 
+// GetValue returns property value in int64
 func (sp IntProperty) GetValue() int64 {
 	return sp.value
 }
 
+// GetHash returns a hash of int64 value
 func (sp IntProperty) GetHash() hash.Hash {
 	return sp.hash
 }
