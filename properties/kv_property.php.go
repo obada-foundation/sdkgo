@@ -18,6 +18,7 @@ type Record struct {
 	hash  hash.Hash
 }
 
+// NewRecord creates a new key/value record
 func NewRecord(key string, value string, log *log.Logger, debug bool) (Record, error) {
 	var r Record
 

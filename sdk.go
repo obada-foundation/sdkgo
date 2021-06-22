@@ -89,7 +89,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	obitIdProp, err := properties.NewObitIDProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
+	obitIDProp, err := properties.NewObitIDProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
@@ -119,7 +119,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	o.obitID = obitIdProp
+	o.obitID = obitIDProp
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
 	o.partNumber = pnProp
@@ -189,7 +189,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 
 // NewObitID creates new obit id
 func (sdk *Sdk) NewObitID(dto ObitIDDto) (properties.ObitID, error) {
-	var obitId properties.ObitID
+	var obitID properties.ObitID
 
 	if sdk.debug {
 		sdk.logger.Printf("NewObitId(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber)
@@ -197,32 +197,32 @@ func (sdk *Sdk) NewObitID(dto ObitIDDto) (properties.ObitID, error) {
 
 	err := sdk.validate.Struct(dto)
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
 	snProp, err := properties.NewStringProperty(dto.SerialNumberHash, sdk.logger, sdk.debug)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
 	mnProp, err := properties.NewStringProperty(dto.Manufacturer, sdk.logger, sdk.debug)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
 	pnProp, err := properties.NewStringProperty(dto.PartNumber, sdk.logger, sdk.debug)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
-	obitId, err = properties.NewObitIDProperty(snProp, mnProp, pnProp, sdk.logger, sdk.debug)
+	obitID, err = properties.NewObitIDProperty(snProp, mnProp, pnProp, sdk.logger, sdk.debug)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
-	return obitId, nil
+	return obitID, nil
 }
