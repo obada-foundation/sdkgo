@@ -52,7 +52,7 @@ func TestSdk_NewObit(t *testing.T) {
 	}
 }
 
-func TestSdk_NewObitId(t *testing.T) {
+func TestSdk_NewObitID(t *testing.T) {
 	var logStr bytes.Buffer
 
 	log := log.New(&logStr, "TESTING SDK :: ", 0)
@@ -73,13 +73,13 @@ func TestSdk_NewObitId(t *testing.T) {
 
 	if err != nil {
 		fmt.Println(logStr.String())
-		t.Fatalf("Cannot create ObitId. %s", err)
+		t.Fatalf("Cannot create ObitID. %s", err)
 	}
 
 	fmt.Println(logStr.String())
 }
 
-func TestSdk_ObitIdDtoValidation(t *testing.T) {
+func TestSdk_ObitIDDtoValidation(t *testing.T) {
 	sdk, err := NewSdk(nil, false)
 
 	if err != nil {

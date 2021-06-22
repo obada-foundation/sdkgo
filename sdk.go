@@ -192,7 +192,7 @@ func (sdk *Sdk) NewObitID(dto ObitIDDto) (properties.ObitID, error) {
 	var obitID properties.ObitID
 
 	if sdk.debug {
-		sdk.logger.Printf("NewObitId(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber)
+		sdk.logger.Printf("NewObitID(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber)
 	}
 
 	err := sdk.validate.Struct(dto)

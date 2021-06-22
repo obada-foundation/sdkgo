@@ -54,18 +54,22 @@ func NewRecord(key string, value string, log *log.Logger, debug bool) (Record, e
 	return r, nil
 }
 
+// GetKey returns a record key
 func (r *Record) GetKey() StringProperty {
 	return r.key
 }
 
+// GetValue returns a record value
 func (r *Record) GetValue() StringProperty {
 	return r.value
 }
 
+// GetHash returns a record hash
 func (r *Record) GetHash() hash.Hash {
 	return r.hash
 }
 
+// NewMapProperty creates map property
 func NewMapProperty(kv map[string]string, log *log.Logger, debug bool) (KvProperty, error) {
 	var mp KvProperty
 	var kvDec uint64
