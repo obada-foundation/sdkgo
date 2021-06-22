@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// Status is representing the Obit status
 type Status string
 
 // StatusFunctional represent a functional obit

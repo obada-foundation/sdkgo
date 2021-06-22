@@ -11,6 +11,7 @@ import (
 
 const obadaReleaseDateUTC = 1624387536
 
+// Sdk OBADA SDK
 type Sdk struct {
 	logger   *log.Logger
 	debug    bool
