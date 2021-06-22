@@ -34,7 +34,7 @@ type ObitDto struct {
 
 // Obit todo add description
 type Obit struct {
-	obitId           properties.ObitId
+	obitID           properties.ObitID
 	serialNumberHash properties.StringProperty
 	manufacturer     properties.StringProperty
 	partNumber       properties.StringProperty

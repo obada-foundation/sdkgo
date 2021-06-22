@@ -110,7 +110,6 @@ func TestSdk_RootHash(t *testing.T) {
 	dto.OwnerDid = "did:obada:owner:123456"
 	dto.Status = "STOLEN"
 
-
 	dto.ModifiedOn = time.Now().Unix()
 	dto.Matadata = map[string]string{
 		"key":   "type",

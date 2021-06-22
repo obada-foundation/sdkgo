@@ -118,7 +118,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	o.obitId = obitIdProp
+	o.obitID = obitIdProp
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
 	o.partNumber = pnProp
@@ -140,7 +140,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 		o.logger.Println("\n\nObit root hash calculation")
 	}
 
-	sum := o.obitId.GetHash().GetDec() +
+	sum := o.obitID.GetHash().GetDec() +
 		o.serialNumberHash.GetHash().GetDec() +
 		o.manufacturer.GetHash().GetDec() +
 		o.partNumber.GetHash().GetDec() +
@@ -155,7 +155,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 	if o.debug {
 		o.logger.Println(fmt.Sprintf(
 			"(%d + %d + %d + %d + %d + %d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
-			o.obitId.GetHash().GetDec(),
+			o.obitID.GetHash().GetDec(),
 			o.serialNumberHash.GetHash().GetDec(),
 			o.manufacturer.GetHash().GetDec(),
 			o.partNumber.GetHash().GetDec(),
@@ -186,8 +186,8 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 }
 
 // NewObitId c
-func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitId, error) {
-	var obitId properties.ObitId
+func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitID, error) {
+	var obitId properties.ObitID
 
 	if sdk.debug {
 		sdk.logger.Printf("NewObitId(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber)
