@@ -38,12 +38,12 @@ func TestSdk_NewObit(t *testing.T) {
 	dto.Matadata = map[string]string{
 		"color": "red",
 	}
-	dto.StructureData = map[string]string{
+	dto.StructuredData = map[string]string{
 		"foo": "bar",
 	}
 	dto.Documents = map[string]string{}
 	dto.Status = "STOLEN"
-	dto.ModifiedAt = time.Now()
+	dto.ModifiedOn = time.Now().Unix()
 
 	_, err = sdk.NewObit(dto)
 
@@ -110,18 +110,13 @@ func TestSdk_RootHash(t *testing.T) {
 	dto.OwnerDid = "did:obada:owner:123456"
 	dto.Status = "STOLEN"
 
-	date, err := time.Parse("2006-01-02", "2021-07-01")
 
-	if err != nil {
-		t.Fatalf(err.Error())
-	}
-
-	dto.ModifiedAt = date
+	dto.ModifiedOn = time.Now().Unix()
 	dto.Matadata = map[string]string{
 		"key":   "type",
 		"value": "phone",
 	}
-	dto.StructureData = map[string]string{
+	dto.StructuredData = map[string]string{
 		"key":   "color",
 		"value": "red",
 	}

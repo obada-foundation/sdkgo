@@ -1,9 +1,15 @@
 package properties
 
-import "testing"
+import (
+	"log"
+	"os"
+	"testing"
+)
 
 func TestNewRecord(t *testing.T) {
-	r, err := NewRecord("color", "red")
+	log := log.New(os.Stdout, "TESTING SDK :: ", 0)
+
+	r, err := NewRecord("color", "red", log, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())

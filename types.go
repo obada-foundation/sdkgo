@@ -3,7 +3,6 @@ package sdk_go
 import (
 	"github.com/obada-foundation/sdk-go/properties"
 	"log"
-	"time"
 )
 
 type Status string
@@ -27,7 +26,7 @@ type ObitDto struct {
 	Matadata       map[string]string
 	StructuredData map[string]string
 	Documents      map[string]string
-	ModifiedAt     time.Time
+	ModifiedOn     int64 `validate:"min-modified-on"`
 	Status         string
 }
 
@@ -41,7 +40,7 @@ type Obit struct {
 	metadata         properties.KvProperty
 	structuredData   properties.KvProperty
 	documents        properties.KvProperty
-	modifiedAt       properties.TimeProperty
+	modifiedOn       properties.IntProperty
 	status           properties.StatusProperty
 	debug            bool
 	logger           *log.Logger

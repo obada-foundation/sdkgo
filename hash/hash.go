@@ -47,7 +47,7 @@ func NewHash(value string, log *log.Logger, debug bool) (Hash, error) {
 // hashToDec ...
 func hashToDec(hash string, log *log.Logger, debug bool) (uint64, error) {
 	match, err := regexp.MatchString(`^[0-9a-fA-F]+$`, hash)
-	var partialHash string
+	partialHash := hash
 
 	if err != nil {
 		return 0, fmt.Errorf("cannot check if given string %q is valid hex: %w", hash, err)

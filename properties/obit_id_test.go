@@ -4,6 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"log"
+	"os"
 	"testing"
 )
 
@@ -11,17 +13,19 @@ func TestNewObitId(t *testing.T) {
 	h := sha256.New()
 	h.Write([]byte("serial_number"))
 
+	log := log.New(os.Stdout, "TESTING SDK :: ", 0)
+
 	serialNumberHash := hex.EncodeToString(h.Sum(nil))
 
-	snh, err := NewStringProperty(serialNumberHash)
-	m, err := NewStringProperty("manufacturer")
-	pn, err := NewStringProperty("part number")
+	snh, err := NewStringProperty(serialNumberHash, log, false)
+	m, err := NewStringProperty("manufacturer", log, false)
+	pn, err := NewStringProperty("part number", log, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
 
-	obitId, err := NewObitId(snh, m, pn)
+	obitId, err := NewObitIdProperty(snh, m, pn, log, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())

@@ -9,6 +9,8 @@ import (
 	"github.com/obada-foundation/sdk-go/properties"
 )
 
+const obadaReleaseDateUTC = 1624387536
+
 type Sdk struct {
 	logger   *log.Logger
 	debug    bool
@@ -26,7 +28,13 @@ func NewSdk(log *log.Logger, debug bool) (*Sdk, error) {
 func initializeValidator() *validator.Validate {
 	v := validator.New()
 
+	v.RegisterValidation("min-modified-on", validateMinModifiedOn)
+
 	return v
+}
+
+func validateMinModifiedOn(fl validator.FieldLevel) bool {
+	return fl.Field().Int() >= obadaReleaseDateUTC
 }
 
 // NewObit s
@@ -86,7 +94,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	modifiedAt, err := properties.NewTimeProperty(dto.ModifiedAt, sdk.logger, sdk.debug)
+	modifiedOn, err := properties.NewIntProperty(dto.ModifiedOn, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
@@ -120,7 +128,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	o.metadata = metadataProp
 	o.structuredData = strctDataProp
 	o.documents = documentsProp
-	o.modifiedAt = modifiedAt
+	o.modifiedOn = modifiedOn
 
 	return o, nil
 }
@@ -141,7 +149,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 		o.metadata.GetHash().GetDec() +
 		o.structuredData.GetHash().GetDec() +
 		o.documents.GetHash().GetDec() +
-		o.modifiedAt.GetHash().GetDec() +
+		o.modifiedOn.GetHash().GetDec() +
 		o.status.GetHash().GetDec()
 
 	if o.debug {
@@ -156,7 +164,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 			o.metadata.GetHash().GetDec(),
 			o.structuredData.GetHash().GetDec(),
 			o.documents.GetHash().GetDec(),
-			o.modifiedAt.GetHash().GetDec(),
+			o.modifiedOn.GetHash().GetDec(),
 			o.status.GetHash().GetDec(),
 			sum,
 			sum,
