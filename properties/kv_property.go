@@ -7,11 +7,13 @@ import (
 	"strconv"
 )
 
+// KvProperty ...
 type KvProperty struct {
 	records []Record
 	hash    hash.Hash
 }
 
+// Record ...
 type Record struct {
 	key   StringProperty
 	value StringProperty
@@ -102,10 +104,12 @@ func NewMapProperty(kv map[string]string, log *log.Logger, debug bool) (KvProper
 	return mp, nil
 }
 
+// GetAll returns slice of records
 func (mp *KvProperty) GetAll() []Record {
 	return mp.records
 }
 
+// GetHash returns hash of all records
 func (mp *KvProperty) GetHash() hash.Hash {
 	return mp.hash
 }
