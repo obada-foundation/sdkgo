@@ -11,6 +11,7 @@ type StringProperty struct {
 	hash  hash.Hash
 }
 
+// NewStringProperty creates a new obit property from the string
 func NewStringProperty(value string, log *log.Logger, debug bool) (StringProperty, error) {
 	var sp StringProperty
 
@@ -30,10 +31,12 @@ func NewStringProperty(value string, log *log.Logger, debug bool) (StringPropert
 	return sp, nil
 }
 
+// GetValue returns a string value
 func (sp StringProperty) GetValue() string {
 	return sp.value
 }
 
+// GetHash returns string hash
 func (sp StringProperty) GetHash() hash.Hash {
 	return sp.hash
 }

@@ -11,6 +11,7 @@ type StatusProperty struct {
 	hash  hash.Hash
 }
 
+// NewStatusProperty creates a new status property for obit
 func NewStatusProperty(status string, log *log.Logger, debug bool) (StatusProperty, error) {
 	var sp StatusProperty
 
@@ -30,10 +31,12 @@ func NewStatusProperty(status string, log *log.Logger, debug bool) (StatusProper
 	return sp, nil
 }
 
+// GetValue returns obit status
 func (sp StatusProperty) GetValue() string {
 	return sp.value
 }
 
+// GetHash returns status hash
 func (sp StatusProperty) GetHash() hash.Hash {
 	return sp.hash
 }
