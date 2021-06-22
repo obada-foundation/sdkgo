@@ -7,14 +7,15 @@ import (
 	"log"
 )
 
-type ObitId struct {
+type ObitID struct {
 	usn  string
 	did  string
 	hash hash.Hash
 }
 
+// NewObitIdProperty creates new ObitID from given arguments
 func NewObitIdProperty(serialNumberHash StringProperty, manufacturer StringProperty, partNumber StringProperty, log *log.Logger, debug bool) (ObitId, error) {
-	var id ObitId
+	var id ObitID
 
 	snhHash := serialNumberHash.GetHash()
 	mh := manufacturer.GetHash()
@@ -56,14 +57,17 @@ func NewObitIdProperty(serialNumberHash StringProperty, manufacturer StringPrope
 	return id, nil
 }
 
-func (id *ObitId) GetHash() hash.Hash {
+// GetHash returns ObitID hash
+func (id *ObitID) GetHash() hash.Hash {
 	return id.hash
 }
 
-func (id *ObitId) GetDid() string {
+// GetDid returns obit DID
+func (id *ObitID) GetDid() string {
 	return id.did
 }
 
-func (id *ObitId) GetUsn() string {
+// GetUsn returns the universal serial number
+func (id *ObitID) GetUsn() string {
 	return id.usn
 }
