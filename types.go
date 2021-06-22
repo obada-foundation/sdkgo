@@ -7,10 +7,19 @@ import (
 
 type Status string
 
+// StatusFunctional represent a functional obit
 const StatusFunctional Status = "FUNCTIONAL"
+
+// StatusNonFunctional represent a non-functional obit
 const StatusNonFunctional Status = "NON_FUNCTIONAL"
+
+// StatusDisposed represent a disposed obit
 const StatusDisposed Status = "DISPOSED"
+
+// StatusStolen represent a stolen obit
 const StatusStolen Status = "STOLEN"
+
+// DisabledByOwner represent obit which was disabled by owner
 const DisabledByOwner Status = "DISABLED_BY_OWNER"
 
 // ObitIDDto todo add description

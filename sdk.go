@@ -89,7 +89,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	obitIdProp, err := properties.NewObitIdProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
+	obitIdProp, err := properties.NewObitIDProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
@@ -218,7 +218,7 @@ func (sdk *Sdk) NewObitID(dto ObitIDDto) (properties.ObitID, error) {
 		return obitId, err
 	}
 
-	obitId, err = properties.NewObitIdProperty(snProp, mnProp, pnProp, sdk.logger, sdk.debug)
+	obitId, err = properties.NewObitIDProperty(snProp, mnProp, pnProp, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return obitId, err

@@ -13,8 +13,8 @@ type ObitID struct {
 	hash hash.Hash
 }
 
-// NewObitIdProperty creates new ObitID from given arguments
-func NewObitIdProperty(serialNumberHash StringProperty, manufacturer StringProperty, partNumber StringProperty, log *log.Logger, debug bool) (ObitID, error) {
+// NewObitIDProperty creates new ObitID from given arguments
+func NewObitIDProperty(serialNumberHash StringProperty, manufacturer StringProperty, partNumber StringProperty, log *log.Logger, debug bool) (ObitID, error) {
 	var id ObitID
 
 	snhHash := serialNumberHash.GetHash()

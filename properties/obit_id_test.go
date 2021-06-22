@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestNewObitId(t *testing.T) {
+func TestNewObitIDProperty(t *testing.T) {
 	h := sha256.New()
 	h.Write([]byte("serial_number"))
 
@@ -25,7 +25,7 @@ func TestNewObitId(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 
-	obitId, err := NewObitIdProperty(snh, m, pn, log, false)
+	obitId, err := NewObitIDProperty(snh, m, pn, log, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())
