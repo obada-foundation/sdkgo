@@ -1,12 +1,12 @@
-package sdk_go
+package sdkgo
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/obada-foundation/sdk-go/properties"
+	"github.com/obada-foundation/sdkgo/properties"
 )
 
 const obadaReleaseDateUTC = 1624387536
@@ -19,20 +19,28 @@ type Sdk struct {
 }
 
 // NewSdk creates a new obada SDK instance
-func NewSdk(log *log.Logger, debug bool) (*Sdk, error) {
+func NewSdk(logger *log.Logger, debug bool) (*Sdk, error) {
+	v, err := initializeValidator()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &Sdk{
-		logger:   log,
+		logger:   logger,
 		debug:    debug,
-		validate: initializeValidator(),
+		validate: v,
 	}, nil
 }
 
-func initializeValidator() *validator.Validate {
+func initializeValidator() (*validator.Validate, error) {
 	v := validator.New()
 
-	v.RegisterValidation("min-modified-on", validateMinModifiedOn)
+	if err := v.RegisterValidation("min-modified-on", validateMinModifiedOn); err != nil {
+		return v, err
+	}
 
-	return v
+	return v, nil
 }
 
 func validateMinModifiedOn(fl validator.FieldLevel) bool {

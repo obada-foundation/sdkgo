@@ -6,4 +6,4 @@
 Package sdk_go provides an API for working with OBADA entities.
 */
 
-package sdk_go
+package sdkgo

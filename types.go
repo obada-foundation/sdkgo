@@ -1,7 +1,7 @@
-package sdk_go
+package sdkgo
 
 import (
-	"github.com/obada-foundation/sdk-go/properties"
+	"github.com/obada-foundation/sdkgo/properties"
 	"log"
 )
 

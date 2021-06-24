@@ -2,12 +2,12 @@ package properties
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdk-go/base58"
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/base58"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 )
 
-// ObitID ...
+// ObitID represent obit identifier
 type ObitID struct {
 	usn  string
 	did  string
@@ -15,7 +15,7 @@ type ObitID struct {
 }
 
 // NewObitIDProperty creates new ObitID from given arguments
-func NewObitIDProperty(serialNumberHash StringProperty, manufacturer StringProperty, partNumber StringProperty, log *log.Logger, debug bool) (ObitID, error) {
+func NewObitIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, logger *log.Logger, debug bool) (ObitID, error) {
 	var id ObitID
 
 	snhHash := serialNumberHash.GetHash()
@@ -25,7 +25,7 @@ func NewObitIDProperty(serialNumberHash StringProperty, manufacturer StringPrope
 	sum := serialNumberHash.GetHash().GetDec() + manufacturer.GetHash().GetDec() + partNumber.GetHash().GetDec()
 
 	if debug {
-		log.Printf(
+		logger.Printf(
 			"NewObitIDProperty(%v, %v, %v) -> (%d + %d + %d) -> %d",
 			serialNumberHash,
 			manufacturer,
@@ -37,7 +37,7 @@ func NewObitIDProperty(serialNumberHash StringProperty, manufacturer StringPrope
 		)
 	}
 
-	h, err := hash.NewHash(fmt.Sprintf("%x", sum), log, debug)
+	h, err := hash.NewHash(fmt.Sprintf("%x", sum), logger, debug)
 
 	if err != nil {
 		return id, fmt.Errorf("cannot create obit id: %w", err)

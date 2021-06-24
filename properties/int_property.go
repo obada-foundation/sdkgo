@@ -1,7 +1,7 @@
 package properties
 
 import (
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 	"strconv"
 )
@@ -13,21 +13,21 @@ type IntProperty struct {
 }
 
 // NewIntProperty creates a new obit property from integer value
-func NewIntProperty(int int64, log *log.Logger, debug bool) (IntProperty, error) {
+func NewIntProperty(i int64, logger *log.Logger, debug bool) (IntProperty, error) {
 	var ip IntProperty
 
 	if debug {
-		log.Printf("\nNewIntProperty(%v)", int)
+		logger.Printf("\nNewIntProperty(%v)", i)
 	}
 
-	h, err := hash.NewHash(strconv.FormatInt(int, 10), log, debug)
+	h, err := hash.NewHash(strconv.FormatInt(i, 10), logger, debug)
 
 	if err != nil {
 		return ip, err
 	}
 
 	ip.hash = h
-	ip.value = int
+	ip.value = i
 
 	return ip, nil
 }

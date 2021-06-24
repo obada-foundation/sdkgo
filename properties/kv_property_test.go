@@ -7,9 +7,9 @@ import (
 )
 
 func TestNewRecord(t *testing.T) {
-	log := log.New(os.Stdout, "TESTING SDK :: ", 0)
+	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
 
-	r, err := NewRecord("color", "red", log, false)
+	r, err := NewRecord("color", "red", logger, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())

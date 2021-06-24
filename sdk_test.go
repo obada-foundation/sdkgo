@@ -1,4 +1,4 @@
-package sdk_go
+package sdkgo
 
 import (
 	"bytes"
@@ -20,9 +20,9 @@ func TestNewSdk(t *testing.T) {
 func TestSdk_NewObit(t *testing.T) {
 	var logStr bytes.Buffer
 
-	log := log.New(&logStr, "TESTING SDK :: ", 0)
+	logger := log.New(&logStr, "TESTING SDK :: ", 0)
 
-	sdk, err := NewSdk(log, true)
+	sdk, err := NewSdk(logger, true)
 
 	if err != nil {
 		t.Fatal("Cannot initialize OBADA SDK")
@@ -55,9 +55,9 @@ func TestSdk_NewObit(t *testing.T) {
 func TestSdk_NewObitID(t *testing.T) {
 	var logStr bytes.Buffer
 
-	log := log.New(&logStr, "TESTING SDK :: ", 0)
+	logger := log.New(&logStr, "TESTING SDK :: ", 0)
 
-	sdk, err := NewSdk(log, true)
+	sdk, err := NewSdk(logger, true)
 
 	if err != nil {
 		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
@@ -102,7 +102,7 @@ func TestSdk_ObitIDDtoValidation(t *testing.T) {
 func TestSdk_RootHash(t *testing.T) {
 	var dto ObitDto
 
-	// sha256(SN123456)
+	// The value of SerialNumberHash is sha256(SN123456)
 	dto.SerialNumberHash = "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03"
 	dto.Manufacturer = "Sony"
 	dto.PartNumber = "PN123456"
@@ -126,9 +126,9 @@ func TestSdk_RootHash(t *testing.T) {
 
 	var str bytes.Buffer
 
-	log := log.New(&str, "TESTING SDK :: ", 0)
+	logger := log.New(&str, "TESTING SDK :: ", 0)
 
-	sdk, err := NewSdk(log, true)
+	sdk, err := NewSdk(logger, true)
 
 	if err != nil {
 		fmt.Println(str.String())
@@ -152,6 +152,6 @@ func TestSdk_RootHash(t *testing.T) {
 
 	if expectedHash != rootHash.GetHash() {
 		fmt.Println(str.String())
-		//t.Errorf("Expect to get %q but reived %q", expectedHash, rootHash.GetHash())
+		// Temporary disabled t.Errorf("Expect to get %q but reived %q", expectedHash, rootHash.GetHash())
 	}
 }

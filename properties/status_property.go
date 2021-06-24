@@ -2,25 +2,25 @@ package properties
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 )
 
-// StatusProperty ...
+// StatusProperty represent a status and status hash
 type StatusProperty struct {
 	value string
 	hash  hash.Hash
 }
 
 // NewStatusProperty creates a new status property for obit
-func NewStatusProperty(status string, log *log.Logger, debug bool) (StatusProperty, error) {
+func NewStatusProperty(status string, logger *log.Logger, debug bool) (StatusProperty, error) {
 	var sp StatusProperty
 
 	if debug {
-		log.Printf("\nNewStatusProperty(%q)", status)
+		logger.Printf("\nNewStatusProperty(%q)", status)
 	}
 
-	h, err := hash.NewHash(status, log, debug)
+	h, err := hash.NewHash(status, logger, debug)
 
 	if err != nil {
 		return sp, fmt.Errorf("cannot hash %q: %w", status, err)

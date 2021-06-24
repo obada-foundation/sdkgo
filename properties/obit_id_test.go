@@ -13,19 +13,29 @@ func TestNewObitIDProperty(t *testing.T) {
 	h := sha256.New()
 	h.Write([]byte("serial_number"))
 
-	log := log.New(os.Stdout, "TESTING SDK :: ", 0)
+	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
 
 	serialNumberHash := hex.EncodeToString(h.Sum(nil))
 
-	snh, err := NewStringProperty(serialNumberHash, log, false)
-	m, err := NewStringProperty("manufacturer", log, false)
-	pn, err := NewStringProperty("part number", log, false)
+	snh, err := NewStringProperty(serialNumberHash, logger, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
 
-	obitId, err := NewObitIDProperty(snh, m, pn, log, false)
+	m, err := NewStringProperty("manufacturer", logger, false)
+
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+
+	pn, err := NewStringProperty("part number", logger, false)
+
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+
+	obitID, err := NewObitIDProperty(snh, m, pn, logger, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())
@@ -33,9 +43,9 @@ func TestNewObitIDProperty(t *testing.T) {
 
 	expectedUsn := "2y5zjyCj"
 
-	if obitId.GetUsn() != expectedUsn {
-		t.Fatalf("Expected to to get usn %q but received %q", expectedUsn, obitId.GetUsn())
+	if obitID.GetUsn() != expectedUsn {
+		t.Fatalf("Expected to to get usn %q but received %q", expectedUsn, obitID.GetUsn())
 	}
 
-	fmt.Println(obitId)
+	fmt.Println(obitID)
 }

@@ -2,25 +2,25 @@ package properties
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 )
 
-// StringProperty ...
+// StringProperty represent a string property and string hash
 type StringProperty struct {
 	value string
 	hash  hash.Hash
 }
 
 // NewStringProperty creates a new obit property from the string
-func NewStringProperty(value string, log *log.Logger, debug bool) (StringProperty, error) {
+func NewStringProperty(value string, logger *log.Logger, debug bool) (StringProperty, error) {
 	var sp StringProperty
 
 	if debug {
-		log.Printf("\nNewStringProperty(%q)", value)
+		logger.Printf("\nNewStringProperty(%q)", value)
 	}
 
-	h, err := hash.NewHash(value, log, debug)
+	h, err := hash.NewHash(value, logger, debug)
 
 	if err != nil {
 		return sp, fmt.Errorf("cannot hash %q: %w", value, err)
