@@ -5,5 +5,4 @@
 /*
 Package sdkgo provides an API for working with OBADA entities.
 */
-
 package sdkgo

@@ -130,6 +130,10 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 
 	altIDsProp, err := properties.NewSliceStrProperty(dto.AlternateIDS, sdk.logger, sdk.debug)
 
+	if err != nil {
+		return o, err
+	}
+
 	o.obitID = obitIDProp
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
