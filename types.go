@@ -39,10 +39,11 @@ type ObitDto struct {
 	StructuredData map[string]string
 	Documents      map[string]string
 	ModifiedOn     int64 `validate:"min-modified-on"`
+	AlternateIDS   []string
 	Status         string
 }
 
-// Obit todo add description
+// Obit represent asset data structure
 type Obit struct {
 	obitID           properties.ObitID
 	serialNumberHash properties.StringProperty
@@ -54,6 +55,7 @@ type Obit struct {
 	structuredData   properties.KvProperty
 	documents        properties.KvProperty
 	modifiedOn       properties.IntProperty
+	alternateIDS     properties.SliceStrProperty
 	status           properties.StatusProperty
 	debug            bool
 	logger           *log.Logger

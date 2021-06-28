@@ -44,6 +44,10 @@ func TestSdk_NewObit(t *testing.T) {
 	dto.Documents = map[string]string{}
 	dto.Status = "STOLEN"
 	dto.ModifiedOn = time.Now().Unix()
+	dto.AlternateIDS = []string{
+		"1",
+		"2",
+	}
 
 	_, err = sdk.NewObit(dto)
 
@@ -109,6 +113,10 @@ func TestSdk_RootHash(t *testing.T) {
 	dto.ObdDid = "did:obada:obd:1234"
 	dto.OwnerDid = "did:obada:owner:123456"
 	dto.Status = "STOLEN"
+	dto.AlternateIDS = []string{
+		"1",
+		"2",
+	}
 
 	dto.ModifiedOn = time.Now().Unix()
 	dto.Matadata = map[string]string{

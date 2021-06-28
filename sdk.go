@@ -128,6 +128,8 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
+	altIDsProp, err := properties.NewSliceStrProperty(dto.AlternateIDS, sdk.logger, sdk.debug)
+
 	o.obitID = obitIDProp
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
@@ -139,6 +141,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	o.structuredData = strctDataProp
 	o.documents = documentsProp
 	o.modifiedOn = modifiedOn
+	o.alternateIDS = altIDsProp
 
 	return o, nil
 }
@@ -161,6 +164,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 		o.structuredData.GetHash().GetDec() +
 		o.documents.GetHash().GetDec() +
 		o.modifiedOn.GetHash().GetDec() +
+		o.alternateIDS.GetHash().GetDec() +
 		o.status.GetHash().GetDec()
 
 	if o.debug {

@@ -3,3 +3,9 @@ lint:
 
 test:
 	go test ./... -v
+
+vendor:
+	go mod tidy && go mod vendor
+
+coverage:
+	go test ./... -coverprofile=coverage.out && go tool cover -html=coverage.out
