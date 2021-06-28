@@ -26,7 +26,8 @@ func NewObitIDProperty(serialNumberHash, manufacturer, partNumber StringProperty
 
 	if debug {
 		logger.Printf(
-			"NewObitIDProperty(%v, %v, %v) -> (%d + %d + %d) -> %d",
+			"\n <|%s|> => NewObitIDProperty(%v, %v, %v) -> (%d + %d + %d) -> %d",
+			"Making ObitID",
 			serialNumberHash,
 			manufacturer,
 			partNumber,

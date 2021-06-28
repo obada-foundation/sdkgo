@@ -62,31 +62,56 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		sdk.logger.Printf("NewObit(%v)", dto)
 	}
 
-	snProp, err := properties.NewStringProperty(dto.SerialNumberHash, sdk.logger, sdk.debug)
+	snProp, err := properties.NewStringProperty(
+		"Making serialNumberHash",
+		dto.SerialNumberHash,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	manufacturerProp, err := properties.NewStringProperty(dto.Manufacturer, sdk.logger, sdk.debug)
+	manufacturerProp, err := properties.NewStringProperty(
+		"Making manufacturer hash",
+		dto.Manufacturer,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	pnProp, err := properties.NewStringProperty(dto.PartNumber, sdk.logger, sdk.debug)
+	pnProp, err := properties.NewStringProperty(
+		"Making partNumber hash",
+		dto.PartNumber,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	obdDidProp, err := properties.NewStringProperty(dto.ObdDid, sdk.logger, sdk.debug)
+	obdDidProp, err := properties.NewStringProperty(
+		"Making obdDid hash",
+		dto.ObdDid,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	ownerDidProp, err := properties.NewStringProperty(dto.OwnerDid, sdk.logger, sdk.debug)
+	ownerDidProp, err := properties.NewStringProperty(
+		"Making ownerDid hash",
+		dto.OwnerDid,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
@@ -104,31 +129,56 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	modifiedOn, err := properties.NewIntProperty(dto.ModifiedOn, sdk.logger, sdk.debug)
+	modifiedOn, err := properties.NewIntProperty(
+		"Making modifiedOn hash",
+		dto.ModifiedOn,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	metadataProp, err := properties.NewMapProperty(dto.Matadata, sdk.logger, sdk.debug)
+	metadataProp, err := properties.NewMapProperty(
+		"Making matadata hash",
+		dto.Matadata,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	strctDataProp, err := properties.NewMapProperty(dto.StructuredData, sdk.logger, sdk.debug)
+	strctDataProp, err := properties.NewMapProperty(
+		"Making structuredData hash",
+		dto.StructuredData,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	documentsProp, err := properties.NewMapProperty(dto.Documents, sdk.logger, sdk.debug)
+	documentsProp, err := properties.NewMapProperty(
+		"Making documents hash",
+		dto.Documents,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	altIDsProp, err := properties.NewSliceStrProperty(dto.AlternateIDS, sdk.logger, sdk.debug)
+	altIDsProp, err := properties.NewSliceStrProperty(
+		"Making alternateIDs property",
+		dto.AlternateIDS,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
@@ -217,19 +267,34 @@ func (sdk *Sdk) NewObitID(dto ObitIDDto) (properties.ObitID, error) {
 		return obitID, err
 	}
 
-	snProp, err := properties.NewStringProperty(dto.SerialNumberHash, sdk.logger, sdk.debug)
+	snProp, err := properties.NewStringProperty(
+		"Making serialNumberHash",
+		dto.SerialNumberHash,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return obitID, err
 	}
 
-	mnProp, err := properties.NewStringProperty(dto.Manufacturer, sdk.logger, sdk.debug)
+	mnProp, err := properties.NewStringProperty(
+		"Making manufacturer",
+		dto.Manufacturer,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return obitID, err
 	}
 
-	pnProp, err := properties.NewStringProperty(dto.PartNumber, sdk.logger, sdk.debug)
+	pnProp, err := properties.NewStringProperty(
+		"Making partNumber",
+		dto.PartNumber,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return obitID, err

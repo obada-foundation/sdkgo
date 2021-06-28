@@ -17,7 +17,7 @@ func NewStatusProperty(status string, logger *log.Logger, debug bool) (StatusPro
 	var sp StatusProperty
 
 	if debug {
-		logger.Printf("\nNewStatusProperty(%q)", status)
+		logger.Printf("\n <|Making status property|> => NewStatusProperty(%v)", status)
 	}
 
 	h, err := hash.NewHash(status, logger, debug)

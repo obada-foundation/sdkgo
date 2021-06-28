@@ -21,20 +21,20 @@ type Record struct {
 }
 
 // NewRecord creates a new key/value record
-func NewRecord(key, value string, logger *log.Logger, debug bool) (Record, error) {
+func NewRecord(description, key, value string, logger *log.Logger, debug bool) (Record, error) {
 	var r Record
 
 	if debug {
-		log.Printf("\nNewRecord(%q, %q)", key, value)
+		logger.Printf("\n |%s| => NewRecord(%q, %q)", description, key, value)
 	}
 
-	k, err := NewStringProperty(key, logger, debug)
+	k, err := NewStringProperty("New record key", key, logger, debug)
 
 	if err != nil {
 		return r, err
 	}
 
-	v, err := NewStringProperty(value, logger, debug)
+	v, err := NewStringProperty("New record value", value, logger, debug)
 
 	if err != nil {
 		return r, err
@@ -77,16 +77,18 @@ func (r *Record) GetHash() hash.Hash {
 }
 
 // NewMapProperty creates map property
-func NewMapProperty(kv map[string]string, logger *log.Logger, debug bool) (KvProperty, error) {
+func NewMapProperty(description string, kv map[string]string, logger *log.Logger, debug bool) (KvProperty, error) {
 	var mp KvProperty
 	var kvDec uint64
 
 	if debug {
-		log.Printf("\nNewMapProperty(%v)", kv)
+		logger.Printf("\n <|%s|> => NewMapProperty(%v)", description, kv)
 	}
 
 	for key, value := range kv {
-		r, err := NewRecord(key, value, logger, debug)
+		description = "\t" + description + " :: creating key/value record"
+
+		r, err := NewRecord(description, key, value, logger, debug)
 
 		if err != nil {
 			return mp, err
