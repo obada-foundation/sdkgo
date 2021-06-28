@@ -1,4 +1,4 @@
-package sdk_go
+package sdkgo
 
 import (
 	"bytes"
@@ -20,9 +20,9 @@ func TestNewSdk(t *testing.T) {
 func TestSdk_NewObit(t *testing.T) {
 	var logStr bytes.Buffer
 
-	log := log.New(&logStr, "TESTING SDK :: ", 0)
+	logger := log.New(&logStr, "TESTING SDK :: ", 0)
 
-	sdk, err := NewSdk(log, true)
+	sdk, err := NewSdk(logger, true)
 
 	if err != nil {
 		t.Fatal("Cannot initialize OBADA SDK")
@@ -38,12 +38,16 @@ func TestSdk_NewObit(t *testing.T) {
 	dto.Matadata = map[string]string{
 		"color": "red",
 	}
-	dto.StructureData = map[string]string{
+	dto.StructuredData = map[string]string{
 		"foo": "bar",
 	}
 	dto.Documents = map[string]string{}
 	dto.Status = "STOLEN"
-	dto.ModifiedAt = time.Now()
+	dto.ModifiedOn = time.Now().Unix()
+	dto.AlternateIDS = []string{
+		"1",
+		"2",
+	}
 
 	_, err = sdk.NewObit(dto)
 
@@ -52,45 +56,45 @@ func TestSdk_NewObit(t *testing.T) {
 	}
 }
 
-func TestSdk_NewObitId(t *testing.T) {
+func TestSdk_NewObitID(t *testing.T) {
 	var logStr bytes.Buffer
 
-	log := log.New(&logStr, "TESTING SDK :: ", 0)
+	logger := log.New(&logStr, "TESTING SDK :: ", 0)
 
-	sdk, err := NewSdk(log, true)
+	sdk, err := NewSdk(logger, true)
 
 	if err != nil {
 		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
 	}
 
-	dto := ObitIdDto{
+	dto := ObitIDDto{
 		SerialNumberHash: "serialnumberhash",
 		Manufacturer:     "sony",
 		PartNumber:       "pn12345",
 	}
 
-	_, err = sdk.NewObitId(dto)
+	_, err = sdk.NewObitID(dto)
 
 	if err != nil {
 		fmt.Println(logStr.String())
-		t.Fatalf("Cannot create ObitId. %s", err)
+		t.Fatalf("Cannot create ObitID. %s", err)
 	}
 
 	fmt.Println(logStr.String())
 }
 
-func TestSdk_ObitIdDtoValidation(t *testing.T) {
+func TestSdk_ObitIDDtoValidation(t *testing.T) {
 	sdk, err := NewSdk(nil, false)
 
 	if err != nil {
 		t.Fatalf("Cannot initialize OBADA SDK. %s", err)
 	}
 
-	var dto ObitIdDto
+	var dto ObitIDDto
 
 	fmt.Println(len(dto.SerialNumberHash))
 
-	_, err = sdk.NewObitId(dto)
+	_, err = sdk.NewObitID(dto)
 
 	errs := err.(validator.ValidationErrors)
 
@@ -102,26 +106,24 @@ func TestSdk_ObitIdDtoValidation(t *testing.T) {
 func TestSdk_RootHash(t *testing.T) {
 	var dto ObitDto
 
-	// sha256(SN123456)
+	// The value of SerialNumberHash is sha256(SN123456)
 	dto.SerialNumberHash = "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03"
 	dto.Manufacturer = "Sony"
 	dto.PartNumber = "PN123456"
 	dto.ObdDid = "did:obada:obd:1234"
 	dto.OwnerDid = "did:obada:owner:123456"
 	dto.Status = "STOLEN"
-
-	date, err := time.Parse("2006-01-02", "2021-07-01")
-
-	if err != nil {
-		t.Fatalf(err.Error())
+	dto.AlternateIDS = []string{
+		"1",
+		"2",
 	}
 
-	dto.ModifiedAt = date
+	dto.ModifiedOn = time.Now().Unix()
 	dto.Matadata = map[string]string{
 		"key":   "type",
 		"value": "phone",
 	}
-	dto.StructureData = map[string]string{
+	dto.StructuredData = map[string]string{
 		"key":   "color",
 		"value": "red",
 	}
@@ -132,9 +134,9 @@ func TestSdk_RootHash(t *testing.T) {
 
 	var str bytes.Buffer
 
-	log := log.New(&str, "TESTING SDK :: ", 0)
+	logger := log.New(&str, "TESTING SDK :: ", 0)
 
-	sdk, err := NewSdk(log, true)
+	sdk, err := NewSdk(logger, true)
 
 	if err != nil {
 		fmt.Println(str.String())
@@ -158,6 +160,6 @@ func TestSdk_RootHash(t *testing.T) {
 
 	if expectedHash != rootHash.GetHash() {
 		fmt.Println(str.String())
-		//t.Errorf("Expect to get %q but reived %q", expectedHash, rootHash.GetHash())
+		// Temporary disabled t.Errorf("Expect to get %q but reived %q", expectedHash, rootHash.GetHash())
 	}
 }

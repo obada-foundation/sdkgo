@@ -2,19 +2,21 @@ package properties
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdk-go/base58"
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/base58"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 )
 
-type ObitId struct {
+// ObitID represent obit identifier
+type ObitID struct {
 	usn  string
 	did  string
 	hash hash.Hash
 }
 
-func NewObitIdProperty(serialNumberHash StringProperty, manufacturer StringProperty, partNumber StringProperty, log *log.Logger, debug bool) (ObitId, error) {
-	var id ObitId
+// NewObitIDProperty creates new ObitID from given arguments
+func NewObitIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, logger *log.Logger, debug bool) (ObitID, error) {
+	var id ObitID
 
 	snhHash := serialNumberHash.GetHash()
 	mh := manufacturer.GetHash()
@@ -23,8 +25,8 @@ func NewObitIdProperty(serialNumberHash StringProperty, manufacturer StringPrope
 	sum := serialNumberHash.GetHash().GetDec() + manufacturer.GetHash().GetDec() + partNumber.GetHash().GetDec()
 
 	if debug {
-		log.Printf(
-			"NewObitIdProperty(%v, %v, %v) -> (%d + %d + %d) -> %d",
+		logger.Printf(
+			"NewObitIDProperty(%v, %v, %v) -> (%d + %d + %d) -> %d",
 			serialNumberHash,
 			manufacturer,
 			partNumber,
@@ -35,7 +37,7 @@ func NewObitIdProperty(serialNumberHash StringProperty, manufacturer StringPrope
 		)
 	}
 
-	h, err := hash.NewHash(fmt.Sprintf("%x", sum), log, debug)
+	h, err := hash.NewHash(fmt.Sprintf("%x", sum), logger, debug)
 
 	if err != nil {
 		return id, fmt.Errorf("cannot create obit id: %w", err)
@@ -56,14 +58,17 @@ func NewObitIdProperty(serialNumberHash StringProperty, manufacturer StringPrope
 	return id, nil
 }
 
-func (id *ObitId) GetHash() hash.Hash {
+// GetHash returns ObitID hash
+func (id *ObitID) GetHash() hash.Hash {
 	return id.hash
 }
 
-func (id *ObitId) GetDid() string {
+// GetDid returns obit DID
+func (id *ObitID) GetDid() string {
 	return id.did
 }
 
-func (id *ObitId) GetUsn() string {
+// GetUsn returns the universal serial number
+func (id *ObitID) GetUsn() string {
 	return id.usn
 }

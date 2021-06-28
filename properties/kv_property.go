@@ -2,31 +2,39 @@ package properties
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 	"strconv"
 )
 
+// KvProperty representing slice of records and their hash
 type KvProperty struct {
 	records []Record
 	hash    hash.Hash
 }
 
+// Record of key/value
 type Record struct {
 	key   StringProperty
 	value StringProperty
 	hash  hash.Hash
 }
 
-func NewRecord(key string, value string, log *log.Logger, debug bool) (Record, error) {
+// NewRecord creates a new key/value record
+func NewRecord(key, value string, logger *log.Logger, debug bool) (Record, error) {
 	var r Record
 
 	if debug {
 		log.Printf("\nNewRecord(%q, %q)", key, value)
 	}
 
-	k, err := NewStringProperty(key, log, debug)
-	v, err := NewStringProperty(value, log, debug)
+	k, err := NewStringProperty(key, logger, debug)
+
+	if err != nil {
+		return r, err
+	}
+
+	v, err := NewStringProperty(value, logger, debug)
 
 	if err != nil {
 		return r, err
@@ -40,7 +48,7 @@ func NewRecord(key string, value string, log *log.Logger, debug bool) (Record, e
 		log.Printf("(%d + %d) -> %d", kh.GetDec(), vh.GetDec(), kvDec)
 	}
 
-	h, err := hash.NewHash(strconv.FormatUint(kvDec, 10), log, debug)
+	h, err := hash.NewHash(strconv.FormatUint(kvDec, 10), logger, debug)
 
 	if err != nil {
 		return r, err
@@ -53,19 +61,23 @@ func NewRecord(key string, value string, log *log.Logger, debug bool) (Record, e
 	return r, nil
 }
 
+// GetKey returns a record key
 func (r *Record) GetKey() StringProperty {
 	return r.key
 }
 
+// GetValue returns a record value
 func (r *Record) GetValue() StringProperty {
 	return r.value
 }
 
+// GetHash returns a record hash
 func (r *Record) GetHash() hash.Hash {
 	return r.hash
 }
 
-func NewMapProperty(kv map[string]string, log *log.Logger, debug bool) (KvProperty, error) {
+// NewMapProperty creates map property
+func NewMapProperty(kv map[string]string, logger *log.Logger, debug bool) (KvProperty, error) {
 	var mp KvProperty
 	var kvDec uint64
 
@@ -74,7 +86,7 @@ func NewMapProperty(kv map[string]string, log *log.Logger, debug bool) (KvProper
 	}
 
 	for key, value := range kv {
-		r, err := NewRecord(key, value, log, debug)
+		r, err := NewRecord(key, value, logger, debug)
 
 		if err != nil {
 			return mp, err
@@ -86,7 +98,7 @@ func NewMapProperty(kv map[string]string, log *log.Logger, debug bool) (KvProper
 		mp.records = append(mp.records, r)
 	}
 
-	h, err := hash.NewHash(strconv.FormatUint(kvDec, 10), log, debug)
+	h, err := hash.NewHash(strconv.FormatUint(kvDec, 10), logger, debug)
 
 	if err != nil {
 		return mp, fmt.Errorf("cannot hash %q: %w", kvDec, err)
@@ -97,10 +109,12 @@ func NewMapProperty(kv map[string]string, log *log.Logger, debug bool) (KvProper
 	return mp, nil
 }
 
+// GetAll returns slice of records
 func (mp *KvProperty) GetAll() []Record {
 	return mp.records
 }
 
+// GetHash returns hash of all records
 func (mp *KvProperty) GetHash() hash.Hash {
 	return mp.hash
 }
