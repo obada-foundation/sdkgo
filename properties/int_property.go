@@ -13,11 +13,11 @@ type IntProperty struct {
 }
 
 // NewIntProperty creates a new obit property from integer value
-func NewIntProperty(i int64, logger *log.Logger, debug bool) (IntProperty, error) {
+func NewIntProperty(description string, i int64, logger *log.Logger, debug bool) (IntProperty, error) {
 	var ip IntProperty
 
 	if debug {
-		logger.Printf("\nNewIntProperty(%v)", i)
+		logger.Printf("\n <|%s|> => NewIntProperty(%v)", description, i)
 	}
 
 	h, err := hash.NewHash(strconv.FormatInt(i, 10), logger, debug)

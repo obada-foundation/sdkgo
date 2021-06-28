@@ -23,7 +23,7 @@ func TestNewStringProperty(t *testing.T) {
 	for _, tc := range testCases {
 		t.Logf("Testing: %q", tc.arg)
 
-		m, _ := NewStringProperty(tc.arg, logger, false)
+		m, _ := NewStringProperty("", tc.arg, logger, false)
 
 		if m.GetValue() != tc.arg {
 			t.Fatalf("Expecting to get %q but got %q", tc.arg, m.GetValue())

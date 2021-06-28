@@ -17,19 +17,19 @@ func TestNewObitIDProperty(t *testing.T) {
 
 	serialNumberHash := hex.EncodeToString(h.Sum(nil))
 
-	snh, err := NewStringProperty(serialNumberHash, logger, false)
+	snh, err := NewStringProperty("", serialNumberHash, logger, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
 
-	m, err := NewStringProperty("manufacturer", logger, false)
+	m, err := NewStringProperty("", "manufacturer", logger, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
 
-	pn, err := NewStringProperty("part number", logger, false)
+	pn, err := NewStringProperty("", "part number", logger, false)
 
 	if err != nil {
 		t.Fatalf(err.Error())

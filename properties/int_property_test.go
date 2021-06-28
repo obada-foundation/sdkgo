@@ -23,7 +23,7 @@ func TestNewIntProperty(t *testing.T) {
 	for _, tc := range testCases {
 		t.Logf("Testing: %d", tc.arg)
 
-		p, _ := NewIntProperty(tc.arg, logger, false)
+		p, _ := NewIntProperty("creating int property", tc.arg, logger, false)
 
 		if p.GetValue() != tc.arg {
 			t.Fatalf("Expecting to get %q but got %q", tc.arg, p.GetValue())
