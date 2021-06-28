@@ -22,7 +22,7 @@ func NewSliceStrProperty(description string, value []string, logger *log.Logger,
 		logger.Printf("\n <|%s|> => NewSliceStrProperty(%v)", description, value)
 	}
 
-	var dec []uint64
+	dec := make([]uint64, 0, len(value))
 	var decTotal uint64
 
 	for _, str := range value {
