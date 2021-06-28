@@ -1,35 +1,53 @@
-package sdk_go
+package sdkgo
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdk-go/hash"
+	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/obada-foundation/sdk-go/properties"
+	"github.com/obada-foundation/sdkgo/properties"
 )
 
+const obadaReleaseDateUTC = 1624387536
+
+// Sdk OBADA SDK
 type Sdk struct {
 	logger   *log.Logger
 	debug    bool
 	validate *validator.Validate
 }
 
-func NewSdk(log *log.Logger, debug bool) (*Sdk, error) {
+// NewSdk creates a new obada SDK instance
+func NewSdk(logger *log.Logger, debug bool) (*Sdk, error) {
+	v, err := initializeValidator()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &Sdk{
-		logger:   log,
+		logger:   logger,
 		debug:    debug,
-		validate: initializeValidator(),
+		validate: v,
 	}, nil
 }
 
-func initializeValidator() *validator.Validate {
+func initializeValidator() (*validator.Validate, error) {
 	v := validator.New()
 
-	return v
+	if err := v.RegisterValidation("min-modified-on", validateMinModifiedOn); err != nil {
+		return v, err
+	}
+
+	return v, nil
 }
 
-// NewObit s
+func validateMinModifiedOn(fl validator.FieldLevel) bool {
+	return fl.Field().Int() >= obadaReleaseDateUTC
+}
+
+// NewObit creates new obit
 func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	var o Obit
 	o.debug = sdk.debug
@@ -44,31 +62,56 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		sdk.logger.Printf("NewObit(%v)", dto)
 	}
 
-	snProp, err := properties.NewStringProperty(dto.SerialNumberHash, sdk.logger, sdk.debug)
+	snProp, err := properties.NewStringProperty(
+		"Making serialNumberHash",
+		dto.SerialNumberHash,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	manufacturerProp, err := properties.NewStringProperty(dto.Manufacturer, sdk.logger, sdk.debug)
+	manufacturerProp, err := properties.NewStringProperty(
+		"Making manufacturer hash",
+		dto.Manufacturer,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	pnProp, err := properties.NewStringProperty(dto.PartNumber, sdk.logger, sdk.debug)
+	pnProp, err := properties.NewStringProperty(
+		"Making partNumber hash",
+		dto.PartNumber,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	obdDidProp, err := properties.NewStringProperty(dto.ObdDid, sdk.logger, sdk.debug)
+	obdDidProp, err := properties.NewStringProperty(
+		"Making obdDid hash",
+		dto.ObdDid,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	ownerDidProp, err := properties.NewStringProperty(dto.OwnerDid, sdk.logger, sdk.debug)
+	ownerDidProp, err := properties.NewStringProperty(
+		"Making ownerDid hash",
+		dto.OwnerDid,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
@@ -80,37 +123,68 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	obitIdProp, err := properties.NewObitIdProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
+	obitIDProp, err := properties.NewObitIDProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
 
 	if err != nil {
 		return o, err
 	}
 
-	modifiedAt, err := properties.NewTimeProperty(dto.ModifiedAt, sdk.logger, sdk.debug)
+	modifiedOn, err := properties.NewIntProperty(
+		"Making modifiedOn hash",
+		dto.ModifiedOn,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	metadataProp, err := properties.NewMapProperty(dto.Matadata, sdk.logger, sdk.debug)
+	metadataProp, err := properties.NewMapProperty(
+		"Making matadata hash",
+		dto.Matadata,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	strctDataProp, err := properties.NewMapProperty(dto.StructuredData, sdk.logger, sdk.debug)
+	strctDataProp, err := properties.NewMapProperty(
+		"Making structuredData hash",
+		dto.StructuredData,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	documentsProp, err := properties.NewMapProperty(dto.Documents, sdk.logger, sdk.debug)
+	documentsProp, err := properties.NewMapProperty(
+		"Making documents hash",
+		dto.Documents,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
 		return o, err
 	}
 
-	o.obitId = obitIdProp
+	altIDsProp, err := properties.NewSliceStrProperty(
+		"Making alternateIDs property",
+		dto.AlternateIDS,
+		sdk.logger,
+		sdk.debug,
+	)
+
+	if err != nil {
+		return o, err
+	}
+
+	o.obitID = obitIDProp
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
 	o.partNumber = pnProp
@@ -120,11 +194,13 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	o.metadata = metadataProp
 	o.structuredData = strctDataProp
 	o.documents = documentsProp
-	o.modifiedAt = modifiedAt
+	o.modifiedOn = modifiedOn
+	o.alternateIDS = altIDsProp
 
 	return o, nil
 }
 
+// GetRootHash returns obit root hash
 func (o Obit) GetRootHash() (hash.Hash, error) {
 	var rootHash hash.Hash
 
@@ -132,7 +208,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 		o.logger.Println("\n\nObit root hash calculation")
 	}
 
-	sum := o.obitId.GetHash().GetDec() +
+	sum := o.obitID.GetHash().GetDec() +
 		o.serialNumberHash.GetHash().GetDec() +
 		o.manufacturer.GetHash().GetDec() +
 		o.partNumber.GetHash().GetDec() +
@@ -141,13 +217,14 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 		o.metadata.GetHash().GetDec() +
 		o.structuredData.GetHash().GetDec() +
 		o.documents.GetHash().GetDec() +
-		o.modifiedAt.GetHash().GetDec() +
+		o.modifiedOn.GetHash().GetDec() +
+		o.alternateIDS.GetHash().GetDec() +
 		o.status.GetHash().GetDec()
 
 	if o.debug {
 		o.logger.Println(fmt.Sprintf(
 			"(%d + %d + %d + %d + %d + %d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
-			o.obitId.GetHash().GetDec(),
+			o.obitID.GetHash().GetDec(),
 			o.serialNumberHash.GetHash().GetDec(),
 			o.manufacturer.GetHash().GetDec(),
 			o.partNumber.GetHash().GetDec(),
@@ -156,7 +233,7 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 			o.metadata.GetHash().GetDec(),
 			o.structuredData.GetHash().GetDec(),
 			o.documents.GetHash().GetDec(),
-			o.modifiedAt.GetHash().GetDec(),
+			o.modifiedOn.GetHash().GetDec(),
 			o.status.GetHash().GetDec(),
 			sum,
 			sum,
@@ -177,42 +254,57 @@ func (o Obit) GetRootHash() (hash.Hash, error) {
 	return rootHash, nil
 }
 
-// NewObitId c
-func (sdk *Sdk) NewObitId(dto ObitIdDto) (properties.ObitId, error) {
-	var obitId properties.ObitId
+// NewObitID creates new obit id
+func (sdk *Sdk) NewObitID(dto ObitIDDto) (properties.ObitID, error) {
+	var obitID properties.ObitID
 
 	if sdk.debug {
-		sdk.logger.Printf("NewObitId(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber)
+		sdk.logger.Printf("NewObitID(%q, %q, %q)", dto.SerialNumberHash, dto.Manufacturer, dto.PartNumber)
 	}
 
 	err := sdk.validate.Struct(dto)
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
-	snProp, err := properties.NewStringProperty(dto.SerialNumberHash, sdk.logger, sdk.debug)
+	snProp, err := properties.NewStringProperty(
+		"Making serialNumberHash",
+		dto.SerialNumberHash,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
-	mnProp, err := properties.NewStringProperty(dto.Manufacturer, sdk.logger, sdk.debug)
+	mnProp, err := properties.NewStringProperty(
+		"Making manufacturer",
+		dto.Manufacturer,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
-	pnProp, err := properties.NewStringProperty(dto.PartNumber, sdk.logger, sdk.debug)
+	pnProp, err := properties.NewStringProperty(
+		"Making partNumber",
+		dto.PartNumber,
+		sdk.logger,
+		sdk.debug,
+	)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
-	obitId, err = properties.NewObitIdProperty(snProp, mnProp, pnProp, sdk.logger, sdk.debug)
+	obitID, err = properties.NewObitIDProperty(snProp, mnProp, pnProp, sdk.logger, sdk.debug)
 
 	if err != nil {
-		return obitId, err
+		return obitID, err
 	}
 
-	return obitId, nil
+	return obitID, nil
 }

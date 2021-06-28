@@ -1,12 +1,18 @@
 package hash
 
-import "testing"
+import (
+	"log"
+	"os"
+	"testing"
+)
 
 func TestErrorsWhenTryingToCreateHash(t *testing.T) {
 
 }
 
 func TestObadaHashCreation(t *testing.T) {
+	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
+
 	testCases := []struct {
 		arg         string
 		wantSha256  string
@@ -19,7 +25,7 @@ func TestObadaHashCreation(t *testing.T) {
 	for _, tc := range testCases {
 		t.Logf("Testing: %q", tc.arg)
 
-		h, _ := NewHash(tc.arg)
+		h, _ := NewHash(tc.arg, logger, false)
 
 		if h.GetHash() != tc.wantSha256 {
 			t.Errorf("getHash() = %q, want %q", h.GetHash(), tc.wantSha256)
@@ -33,6 +39,8 @@ func TestObadaHashCreation(t *testing.T) {
 }
 
 func TestErrorsWhenTryingConvertNonHexToDec(t *testing.T) {
+	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
+
 	testCases := []struct {
 		arg       string
 		wantError string
@@ -44,7 +52,7 @@ func TestErrorsWhenTryingConvertNonHexToDec(t *testing.T) {
 	for _, tc := range testCases {
 		t.Logf("Testing: %q", tc.arg)
 
-		got, err := hashToDec(tc.arg)
+		got, err := hashToDec(tc.arg, logger, false)
 
 		if got != 0 {
 			t.Errorf("hashToDec(%q) = %d, want %d", tc.arg, got, 0)
@@ -57,6 +65,8 @@ func TestErrorsWhenTryingConvertNonHexToDec(t *testing.T) {
 }
 
 func TestHashToDecimalConversion(t *testing.T) {
+	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
+
 	testCases := []struct {
 		arg  string
 		want uint64
@@ -73,10 +83,14 @@ func TestHashToDecimalConversion(t *testing.T) {
 	for _, tc := range testCases {
 		t.Logf("Testing: %q", tc.arg)
 
-		got, _ := hashToDec(tc.arg)
+		got, err := hashToDec(tc.arg, logger, true)
+
+		if err != nil {
+			t.Fatalf("Cannot convert %s to decimal. %s", tc.arg, err.Error())
+		}
 
 		if got != tc.want {
-			t.Errorf("hashToDec(%q) = %d, want %d", tc.arg, got, tc.want)
+			t.Fatalf("hashToDec(%q) = %d, want %d", tc.arg, got, tc.want)
 		}
 	}
 }
