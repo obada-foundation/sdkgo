@@ -200,6 +200,66 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	return o, nil
 }
 
+// GetObitID returns obit ID
+func (o Obit) GetObitID() properties.ObitID {
+	return o.obitID
+}
+
+// GetSerialNumberHash returns serial number hash Obit property
+func (o Obit) GetSerialNumberHash() properties.StringProperty {
+	return o.serialNumberHash
+}
+
+// GetPartNumber returns part number Obit property
+func (o Obit) GetPartNumber() properties.StringProperty {
+	return o.manufacturer
+}
+
+// GetManufacturer returns manufacturer Obit property
+func (o Obit) GetManufacturer() properties.StringProperty {
+	return o.manufacturer
+}
+
+// GetOwnerDID returns OBADA Obit owner DID
+func (o Obit) GetOwnerDID() properties.StringProperty {
+	return o.ownerDid
+}
+
+// GetObdDID returns OBADA Obit obd DID
+func (o Obit) GetObdDID() properties.StringProperty {
+	return o.obdDid
+}
+
+// GetMetadata returns Obit metadata
+func (o Obit) GetMetadata() properties.KvProperty {
+	return o.metadata
+}
+
+// GetStructuredData returns Obit structured data
+func (o Obit) GetStructuredData() properties.KvProperty {
+	return o.structuredData
+}
+
+// GetDocuments returns Obit documents
+func (o Obit) GetDocuments() properties.KvProperty {
+	return o.documents
+}
+
+// GetModifiedOn returns Obit modified on UNIX timestamp
+func (o Obit) GetModifiedOn() properties.IntProperty {
+	return o.modifiedOn
+}
+
+// GetAlternateIDS returns Obit alternatives identifiers
+func (o Obit) GetAlternateIDS() properties.SliceStrProperty {
+	return o.alternateIDS
+}
+
+// GetStatus returns Obit status
+func (o Obit) GetStatus() properties.StatusProperty {
+	return o.status
+}
+
 // GetRootHash returns obit root hash
 func (o Obit) GetRootHash() (hash.Hash, error) {
 	var rootHash hash.Hash
