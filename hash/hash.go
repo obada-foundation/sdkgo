@@ -16,13 +16,13 @@ type Hash struct {
 }
 
 // NewHash creates a new OBADA hash
-func NewHash(value string, logger *log.Logger, debug bool) (Hash, error) {
+func NewHash(value []byte, logger *log.Logger, debug bool) (Hash, error) {
 	var hash Hash
 	var debugStr string
 
 	h := sha256.New()
 
-	if _, err := h.Write([]byte(value)); err != nil {
+	if _, err := h.Write(value); err != nil {
 		return hash, fmt.Errorf("cannot wite bytes %v to hasher: %w", []byte(value), err)
 	}
 
@@ -75,7 +75,7 @@ func hashToDec(hash string, logger *log.Logger, debug bool) (uint64, error) {
 	return decimal, nil
 }
 
-// GetHash returns hash
+// GetHash returns hash string
 func (h Hash) GetHash() string {
 	return h.hash
 }

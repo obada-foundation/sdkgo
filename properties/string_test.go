@@ -8,7 +8,6 @@ import (
 )
 
 func TestNewStringProperty(t *testing.T) {
-
 	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
 
 	testCases := []struct {
@@ -29,7 +28,7 @@ func TestNewStringProperty(t *testing.T) {
 			t.Fatalf("Expecting to get %q but got %q", tc.arg, m.GetValue())
 		}
 
-		strHash, _ := hash.NewHash(tc.arg, logger, false)
+		strHash, _ := hash.NewHash([]byte(tc.arg), logger, false)
 
 		if m.GetHash() != strHash {
 			t.Fatalf("Expecting to get %v but got %v", strHash, m.GetHash())
