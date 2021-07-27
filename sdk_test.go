@@ -41,9 +41,7 @@ func TestSdk_NewObit(t *testing.T) {
 		Key: "foo",
 		Value: "bar",
 	}}
-	dto.Documents = []properties.Doc{{
-
-	}}
+	dto.Documents = []properties.Doc{}
 	dto.Status = "STOLEN"
 	dto.ModifiedOn = time.Now().Unix()
 	dto.AlternateIDS = []string{
