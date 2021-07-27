@@ -10,7 +10,7 @@ func TestErrorsWhenTryingToCreateHash(t *testing.T) {
 
 }
 
-func TestObadaHashCreation(t *testing.T) {
+func TestNewHash(t *testing.T) {
 	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
 
 	testCases := []struct {
@@ -25,7 +25,7 @@ func TestObadaHashCreation(t *testing.T) {
 	for _, tc := range testCases {
 		t.Logf("Testing: %q", tc.arg)
 
-		h, _ := NewHash(tc.arg, logger, false)
+		h, _ := NewHash([]byte(tc.arg), logger, false)
 
 		if h.GetHash() != tc.wantSha256 {
 			t.Errorf("getHash() = %q, want %q", h.GetHash(), tc.wantSha256)
