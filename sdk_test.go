@@ -154,7 +154,7 @@ func TestSdk_RootHash(t *testing.T) {
 	}
 
 	expectedHash := "7cc8c827156ed2a1a99ead26452a2aeab325673728c9924e06489a84b057435b"
-	rootHash, err := obit.GetRootHash("")
+	rootHash, err := obit.GetRootHash(nil)
 
 	if err != nil {
 		fmt.Println(str.String())

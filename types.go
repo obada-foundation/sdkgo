@@ -53,7 +53,7 @@ type Obit struct {
 	obdDid           properties.StringProperty
 	metadata         properties.KvCollection
 	structuredData   properties.KvCollection
-	documents        properties.DocumentCollection
+	documents        properties.Documents
 	modifiedOn       properties.IntProperty
 	alternateIDS     properties.SliceStrProperty
 	status           properties.StatusProperty

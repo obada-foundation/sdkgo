@@ -241,7 +241,7 @@ func (o Obit) GetStructuredData() properties.KvCollection {
 }
 
 // GetDocuments returns Obit documents
-func (o Obit) GetDocuments() properties.DocumentCollection {
+func (o Obit) GetDocuments() properties.Documents {
 	return o.documents
 }
 
@@ -261,7 +261,7 @@ func (o Obit) GetStatus() properties.StatusProperty {
 }
 
 // GetRootHash returns obit root hash
-func (o Obit) GetRootHash(parentRootHash string) (hash.Hash, error) {
+func (o Obit) GetRootHash(parentRootHash *hash.Hash) (hash.Hash, error) {
 	var rootHash hash.Hash
 
 	if o.debug {
@@ -281,10 +281,6 @@ func (o Obit) GetRootHash(parentRootHash string) (hash.Hash, error) {
 		o.alternateIDS.GetHash().GetDec() +
 		o.status.GetHash().GetDec()
 
-	if len(parentRootHash) > 0 {
-
-	}
-
 	if o.debug {
 		o.logger.Println(fmt.Sprintf(
 			"(%d + %d + %d + %d + %d + %d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
@@ -303,6 +299,16 @@ func (o Obit) GetRootHash(parentRootHash string) (hash.Hash, error) {
 			sum,
 			fmt.Sprintf("%x", sum),
 		))
+	}
+
+	if parentRootHash != nil {
+		prhDec := parentRootHash.GetDec()
+
+		if o.debug {
+			o.logger.Println(fmt.Sprintf("(%d + %d) -> %d", sum, prhDec, sum + prhDec))
+		}
+
+		sum += prhDec
 	}
 
 	rootHash, err := hash.NewHash([]byte(fmt.Sprintf("%x", sum)), o.logger, o.debug)

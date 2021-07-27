@@ -23,7 +23,7 @@ func NewHash(value []byte, logger *log.Logger, debug bool) (Hash, error) {
 	h := sha256.New()
 
 	if _, err := h.Write(value); err != nil {
-		return hash, fmt.Errorf("cannot wite bytes %v to hasher: %w", []byte(value), err)
+		return hash, fmt.Errorf("cannot wite bytes %v to hasher: %w", value, err)
 	}
 
 	hashStr := hex.EncodeToString(h.Sum(nil))

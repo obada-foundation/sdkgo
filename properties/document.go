@@ -1,13 +1,16 @@
 package properties
 
 import (
+	"fmt"
 	"github.com/obada-foundation/sdkgo/hash"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
+// Doc is mapping struct to Obit documents
 type Doc struct {
 	Name     string
 	HashLink string
@@ -27,7 +30,12 @@ func NewHashLinkProperty(description, hashLink string, logger *log.Logger, debug
 		logger.Printf("\n <|%s|> => NewStringProperty(%v)", description, hashLink)
 	}
 
-	resp, err := http.Get(hashLink)
+	u, err := url.Parse(hashLink)
+	if err != nil {
+		return hlp, err
+	}
+
+	resp, err := http.Get(u.String())
 	if err != nil {
 		return hlp, err
 	}
@@ -41,16 +49,22 @@ func NewHashLinkProperty(description, hashLink string, logger *log.Logger, debug
 
 	h, err := hash.NewHash(fileBytes, logger, debug)
 
+	if err != nil {
+		return hlp, err
+	}
+
 	hlp.hashLink = hashLink
 	hlp.hash = h
 
 	return hlp, nil
 }
 
+// GetHash returns hash of the file under hash link
 func (hlp HashLinkProperty) GetHash() hash.Hash {
 	return hlp.hash
 }
 
+// GetHashLink returns a document hash link
 func (hlp HashLinkProperty) GetHashLink() string {
 	return hlp.hashLink
 }
@@ -63,11 +77,11 @@ type Document struct {
 }
 
 // NewDocument creates a new Obit document
-func NewDocument(description, name, hashLink string, logger *log.Logger, debug bool) (Document, error) {
+func NewDocument(name, hashLink string, logger *log.Logger, debug bool) (Document, error) {
 	var d Document
 
 	if debug {
-		logger.Printf("\n |%s| => NewDocument(%q, %q)", description, name, hashLink)
+		logger.Printf("\n |New document| => NewDocument(%q, %q)", name, hashLink)
 	}
 
 	n, err := NewStringProperty("New document name", name, logger, debug)
@@ -118,23 +132,53 @@ func (d *Document) GetHash() hash.Hash {
 	return d.hash
 }
 
-// DocumentCollection
-type DocumentCollection struct {
+// Documents slice of documents
+type Documents struct {
 	documents []Document
 	hash      hash.Hash
 }
 
 // NewDocumentCollection creates the collection of documents
-func NewDocumentCollection(description string, docs []Doc, logger *log.Logger, debug bool) (DocumentCollection, error) {
-	var dc DocumentCollection
+func NewDocumentCollection(description string, docs []Doc, logger *log.Logger, debug bool) (Documents, error) {
+	var ds Documents
+	var docDec uint64
 
 	if debug {
 		logger.Printf("\n <|%s|> => NewDocumentCollection(%v)", description, docs)
 	}
 
-	return dc, nil
+	for _, doc := range docs {
+		description = "\t" + description + " :: creating document"
+
+		d, err := NewDocument(doc.Name, doc.HashLink, logger, debug)
+
+		if err != nil {
+			return ds, err
+		}
+
+		dh := d.GetHash()
+		docDec += dh.GetDec()
+
+		ds.documents = append(ds.documents, d)
+	}
+
+	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), logger, debug)
+
+	if err != nil {
+		return ds, fmt.Errorf("cannot hash %q: %w", docDec, err)
+	}
+
+	ds.hash = h
+
+	return ds, nil
 }
 
-func (dc DocumentCollection) GetHash() hash.Hash {
-	return dc.hash
+// GetHash returns a hash of documents collection
+func (ds Documents) GetHash() hash.Hash {
+	return ds.hash
+}
+
+// GetAll returns all Obit documents
+func (ds Documents) GetAll() []Document {
+	return ds.documents
 }

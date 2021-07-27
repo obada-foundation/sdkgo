@@ -20,6 +20,7 @@ type Record struct {
 	hash  hash.Hash
 }
 
+// KV represents key/value mapping to Obit KV collection record.
 type KV struct {
 	Key   string
 	Value string
