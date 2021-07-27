@@ -4,23 +4,21 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/go-playground/validator/v10"
+	"github.com/obada-foundation/sdkgo/properties"
+	"github.com/obada-foundation/sdkgo/tests"
 	"log"
 	"testing"
 	"time"
 )
 
 func TestNewSdk(t *testing.T) {
-	_, err := NewSdk(nil, false)
-
-	if err != nil {
+	if _, err := NewSdk(nil, false); err != nil {
 		t.Fatal("Cannot initialize OBADA SDK")
 	}
 }
 
 func TestSdk_NewObit(t *testing.T) {
-	var logStr bytes.Buffer
-
-	logger := log.New(&logStr, "TESTING SDK :: ", 0)
+	logger, _ := tests.CreateSdkTestLogger()
 
 	sdk, err := NewSdk(logger, true)
 
@@ -35,13 +33,15 @@ func TestSdk_NewObit(t *testing.T) {
 	dto.PartNumber = "s"
 	dto.OwnerDid = "did:obada:owner:123456"
 	dto.ObdDid = "did:obada:obd:1234"
-	dto.Matadata = map[string]string{
-		"color": "red",
-	}
-	dto.StructuredData = map[string]string{
-		"foo": "bar",
-	}
-	dto.Documents = map[string]string{}
+	dto.Matadata = []properties.KV{{
+		Key: "color",
+		Value: "red",
+	}}
+	dto.StructuredData = []properties.KV{{
+		Key: "foo",
+		Value: "bar",
+	}}
+	dto.Documents = []properties.Doc{}
 	dto.Status = "STOLEN"
 	dto.ModifiedOn = time.Now().Unix()
 	dto.AlternateIDS = []string{
@@ -119,18 +119,19 @@ func TestSdk_RootHash(t *testing.T) {
 	}
 
 	dto.ModifiedOn = time.Now().Unix()
-	dto.Matadata = map[string]string{
-		"key":   "type",
-		"value": "phone",
+	dto.Matadata = []properties.KV{
+		{
+			Key: "type",
+			Value: "phone",
+		},
 	}
-	dto.StructuredData = map[string]string{
-		"key":   "color",
-		"value": "red",
+	dto.StructuredData = []properties.KV{
+		{
+			Key: "color",
+			Value: "red",
+		},
 	}
-	dto.Documents = map[string]string{
-		"name":      "swipe report",
-		"hash_link": "http://somelink.com",
-	}
+	dto.Documents = []properties.Doc{}
 
 	var str bytes.Buffer
 
@@ -151,7 +152,7 @@ func TestSdk_RootHash(t *testing.T) {
 	}
 
 	expectedHash := "7cc8c827156ed2a1a99ead26452a2aeab325673728c9924e06489a84b057435b"
-	rootHash, err := obit.GetRootHash()
+	rootHash, err := obit.GetRootHash(nil)
 
 	if err != nil {
 		fmt.Println(str.String())
