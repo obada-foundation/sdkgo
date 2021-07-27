@@ -162,8 +162,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	documentsProp, err := properties.NewDocumentCollection(
-		"Making documents hash",
+	documentsProp, err := properties.NewDocumentsCollection(
 		dto.Documents,
 		sdk.logger,
 		sdk.debug,
