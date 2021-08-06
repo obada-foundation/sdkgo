@@ -37,6 +37,10 @@ func TestObit(t *testing.T) {
 
 	h, err := hash.NewHash([]byte("some data"), nil, false)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	testCases := []testCase{
 		{
 			args: args{
