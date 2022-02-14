@@ -6,27 +6,21 @@ import (
 	"github.com/obada-foundation/sdkgo/hash"
 	"github.com/obada-foundation/sdkgo/properties"
 	"log"
-	"reflect"
 	"testing"
 )
 
 func TestObit(t *testing.T) {
 	type want struct {
 		serialNumberHash string
-		manufacturer string
-		partNumber string
-		obdDid string
-		ownerDid string
-		status string
-		alternateIDS []string
-		modifiedOn int64
-		metadata map[string]string
-		structuredData map[string]string
-		checksum string
+		manufacturer     string
+		partNumber       string
+		obdDid           string
+		ownerDid         string
+		checksum         string
 	}
 
 	type args struct {
-		dto ObitDto
+		dto            ObitDto
 		parentChecksum *hash.Hash
 	}
 
@@ -51,46 +45,19 @@ func TestObit(t *testing.T) {
 						Manufacturer:     "Sony",
 						PartNumber:       "PN123456",
 					},
-					ObdDid:   "did:obada:obd:1234",
-					OwnerDid: "did:obada:owner:123456",
-					Status:   "STOLEN",
-					AlternateIDS: []string{
-						"1",
-						"2",
-					},
-					ModifiedOn: 1628244835,
-					Matadata: []properties.KV{
-						{
-							Key:   "type",
-							Value: "phone",
-						},
-					},
-					StructuredData: []properties.KV{
-						{
-							Key:   "color",
-							Value: "red",
-						},
-					},
+					ObdDid:    "did:obada:obd:1234",
+					OwnerDid:  "did:obada:owner:123456",
 					Documents: []properties.Doc{},
 				},
 				parentChecksum: nil,
 			},
 			want: want{
 				serialNumberHash: "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03",
-				manufacturer: "Sony",
-				partNumber: "PN123456",
-				obdDid: "did:obada:obd:1234",
-				ownerDid: "did:obada:owner:123456",
-				status: "STOLEN",
-				alternateIDS: []string{"1", "2"},
-				modifiedOn: 1628244835,
-				metadata: map[string]string{
-					"type": "phone",
-				},
-				structuredData: map[string]string{
-					"color": "red",
-				},
-				checksum: "fa953c53d8cb5221166ed99257e23c78ed1c6b1e64edae661ab85d03f2e1421b",
+				manufacturer:     "Sony",
+				partNumber:       "PN123456",
+				obdDid:           "did:obada:obd:1234",
+				ownerDid:         "did:obada:owner:123456",
+				checksum:         "af9d7cf448738b105f9ba35230bb5fd6c0e8c295b2be78bd5f7c1278870eb416",
 			},
 		},
 		{
@@ -102,46 +69,19 @@ func TestObit(t *testing.T) {
 						Manufacturer:     "Sony",
 						PartNumber:       "PN123456",
 					},
-					ObdDid:   "did:obada:obd:1234",
-					OwnerDid: "did:obada:owner:123456",
-					Status:   "STOLEN",
-					AlternateIDS: []string{
-						"1",
-						"2",
-					},
-					ModifiedOn: 1628244835,
-					Matadata: []properties.KV{
-						{
-							Key:   "type",
-							Value: "phone",
-						},
-					},
-					StructuredData: []properties.KV{
-						{
-							Key:   "color",
-							Value: "red",
-						},
-					},
+					ObdDid:    "did:obada:obd:1234",
+					OwnerDid:  "did:obada:owner:123456",
 					Documents: []properties.Doc{},
 				},
 				parentChecksum: &h,
 			},
 			want: want{
 				serialNumberHash: "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03",
-				manufacturer: "Sony",
-				partNumber: "PN123456",
-				obdDid: "did:obada:obd:1234",
-				ownerDid: "did:obada:owner:123456",
-				status: "STOLEN",
-				alternateIDS: []string{"1", "2"},
-				modifiedOn: 1628244835,
-				metadata: map[string]string{
-					"type": "phone",
-				},
-				structuredData: map[string]string{
-					"color": "red",
-				},
-				checksum: "4946b22e3d8aa7285709bdcd87d61c5bae837acf9ee97cdbd3c733febf15920c",
+				manufacturer:     "Sony",
+				partNumber:       "PN123456",
+				obdDid:           "did:obada:obd:1234",
+				ownerDid:         "did:obada:owner:123456",
+				checksum:         "20e48ddaf574116ca9ffd0d0c6538dae10c276c124d6e89408ac634a25235616",
 			},
 		},
 	}
@@ -187,44 +127,6 @@ func TestObit(t *testing.T) {
 
 		if tc.want.ownerDid != obit.GetOwnerDID().GetValue() {
 			t.Errorf("obit.GetOwnerDID() = %q, want %q", obit.GetOwnerDID().GetValue(), tc.want.ownerDid)
-		}
-
-		if tc.want.status != obit.GetStatus().GetValue() {
-			t.Errorf("obit.GetStatus() = %q, want %q", obit.GetStatus().GetValue(), tc.want.status)
-		}
-
-		if !reflect.DeepEqual(tc.want.alternateIDS, obit.GetAlternateIDS().GetValue()) {
-			t.Errorf("obit.GetAlternateIDS() = %q, want %q", obit.GetAlternateIDS().GetValue(), tc.want.alternateIDS)
-		}
-
-		if tc.want.modifiedOn != obit.GetModifiedOn().GetValue() {
-			t.Errorf("obit.GetModifiedOn() = %q, want %q", obit.GetModifiedOn().GetValue(), tc.want.modifiedOn)
-		}
-
-		m := obit.GetMetadata()
-		for _, rec := range m.GetAll() {
-			mv, ok := tc.want.metadata[rec.GetKey().GetValue()]
-
-			if !ok {
-				t.Errorf("obit.GetMetadata() = %v and doesn't contain %v", m.GetAll(), tc.want.metadata)
-			}
-
-			if mv != rec.GetValue().GetValue() {
-				t.Errorf("obit.GetMetadata() = %q and doesn't match %q", rec.GetValue().GetValue(), mv)
-			}
-		}
-
-		sd := obit.GetStructuredData()
-		for _, rec := range sd.GetAll() {
-			sdv, ok := tc.want.structuredData[rec.GetKey().GetValue()]
-
-			if !ok {
-				t.Errorf("obit.GetStructuredData() = %v and doesn't contain %v", sd.GetAll(), tc.want.structuredData)
-			}
-
-			if sdv != rec.GetValue().GetValue() {
-				t.Errorf("obit.GetStructuredData() = %q and doesn't match %q", rec.GetValue().GetValue(), sdv)
-			}
 		}
 
 		checksum, err := obit.GetChecksum(tc.args.parentChecksum)

@@ -76,46 +76,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	statusProp, err := properties.NewStatusProperty(dto.Status, sdk.logger, sdk.debug)
-
-	if err != nil {
-		return o, err
-	}
-
 	obitIDProp, err := properties.NewObitIDProperty(snProp, manufacturerProp, pnProp, sdk.logger, sdk.debug)
-
-	if err != nil {
-		return o, err
-	}
-
-	modifiedOn, err := properties.NewIntProperty(
-		"Making modifiedOn hash",
-		dto.ModifiedOn,
-		sdk.logger,
-		sdk.debug,
-	)
-
-	if err != nil {
-		return o, err
-	}
-
-	metadataProp, err := properties.NewKVCollection(
-		"Making matadata hash",
-		dto.Matadata,
-		sdk.logger,
-		sdk.debug,
-	)
-
-	if err != nil {
-		return o, err
-	}
-
-	strctDataProp, err := properties.NewKVCollection(
-		"Making structuredData hash",
-		dto.StructuredData,
-		sdk.logger,
-		sdk.debug,
-	)
 
 	if err != nil {
 		return o, err
@@ -131,29 +92,13 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	altIDsProp, err := properties.NewSliceStrProperty(
-		"Making alternateIDs property",
-		dto.AlternateIDS,
-		sdk.logger,
-		sdk.debug,
-	)
-
-	if err != nil {
-		return o, err
-	}
-
 	o.obitID = obitIDProp
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
 	o.partNumber = pnProp
 	o.obdDid = obdDidProp
 	o.ownerDid = ownerDidProp
-	o.status = statusProp
-	o.metadata = metadataProp
-	o.structuredData = strctDataProp
 	o.documents = documentsProp
-	o.modifiedOn = modifiedOn
-	o.alternateIDS = altIDsProp
 
 	return o, nil
 }
@@ -188,34 +133,9 @@ func (o Obit) GetObdDID() properties.StringProperty {
 	return o.obdDid
 }
 
-// GetMetadata returns Obit metadata
-func (o Obit) GetMetadata() properties.KvCollection {
-	return o.metadata
-}
-
-// GetStructuredData returns Obit structured data
-func (o Obit) GetStructuredData() properties.KvCollection {
-	return o.structuredData
-}
-
 // GetDocuments returns Obit documents
 func (o Obit) GetDocuments() properties.Documents {
 	return o.documents
-}
-
-// GetModifiedOn returns Obit modified on UNIX timestamp
-func (o Obit) GetModifiedOn() properties.IntProperty {
-	return o.modifiedOn
-}
-
-// GetAlternateIDS returns Obit alternatives identifiers
-func (o Obit) GetAlternateIDS() properties.SliceStrProperty {
-	return o.alternateIDS
-}
-
-// GetStatus returns Obit status
-func (o Obit) GetStatus() properties.StatusProperty {
-	return o.status
 }
 
 // GetChecksum returns Obit checksum
@@ -232,27 +152,18 @@ func (o Obit) GetChecksum(parentChecksum *hash.Hash) (hash.Hash, error) {
 		o.partNumber.GetHash().GetDec() +
 		o.ownerDid.GetHash().GetDec() +
 		o.obdDid.GetHash().GetDec() +
-		o.metadata.GetHash().GetDec() +
-		o.structuredData.GetHash().GetDec() +
-		o.documents.GetHash().GetDec() +
-		o.modifiedOn.GetHash().GetDec() +
-		o.alternateIDS.GetHash().GetDec() +
-		o.status.GetHash().GetDec()
+		o.documents.GetHash().GetDec()
 
 	if o.debug {
 		o.logger.Println(fmt.Sprintf(
-			"(%d + %d + %d + %d + %d + %d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
+			"(%d + %d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
 			o.obitID.GetHash().GetDec(),
 			o.serialNumberHash.GetHash().GetDec(),
 			o.manufacturer.GetHash().GetDec(),
 			o.partNumber.GetHash().GetDec(),
 			o.ownerDid.GetHash().GetDec(),
 			o.obdDid.GetHash().GetDec(),
-			o.metadata.GetHash().GetDec(),
-			o.structuredData.GetHash().GetDec(),
 			o.documents.GetHash().GetDec(),
-			o.modifiedOn.GetHash().GetDec(),
-			o.status.GetHash().GetDec(),
 			sum,
 			sum,
 			fmt.Sprintf("%x", sum),
@@ -263,7 +174,7 @@ func (o Obit) GetChecksum(parentChecksum *hash.Hash) (hash.Hash, error) {
 		prhDec := parentChecksum.GetDec()
 
 		if o.debug {
-			o.logger.Println(fmt.Sprintf("(%d + %d) -> %d", sum, prhDec, sum + prhDec))
+			o.logger.Println(fmt.Sprintf("(%d + %d) -> %d", sum, prhDec, sum+prhDec))
 		}
 
 		sum += prhDec
