@@ -100,6 +100,7 @@ func NewDocumentsCollection(logger *log.Logger, debug bool) Documents {
 	}
 }
 
+// AddDocument adds new document into Obit documents list
 func (ds Documents) AddDocument(d Document) {
 	ds.documents = append(ds.documents, d)
 }

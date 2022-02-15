@@ -15,7 +15,7 @@ type ObitIDDto struct {
 // ObitDto todo add description
 type ObitDto struct {
 	ObitIDDto
-	OwnerDid string `validate:"required"`
+	OwnerDid string
 	ObdDid   string
 }
 
