@@ -54,20 +54,9 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	obdDidProp, err := properties.NewStringProperty(
-		"Making obdDid hash",
-		dto.ObdDid,
-		sdk.logger,
-		sdk.debug,
-	)
-
-	if err != nil {
-		return o, err
-	}
-
-	ownerDidProp, err := properties.NewStringProperty(
-		"Making ownerDid hash",
-		dto.OwnerDid,
+	trustAnchorToken, err := properties.NewStringProperty(
+		"Making Trust Anchor Token hash",
+		dto.TrustAnchorToken,
 		sdk.logger,
 		sdk.debug,
 	)
@@ -95,8 +84,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
 	o.partNumber = pnProp
-	o.obdDid = obdDidProp
-	o.ownerDid = ownerDidProp
+	o.trustAnchorToken = trustAnchorToken
 	o.documents = documentsProp
 
 	return o, nil
@@ -122,14 +110,9 @@ func (o Obit) GetManufacturer() properties.StringProperty {
 	return o.manufacturer
 }
 
-// GetOwnerDID returns OBADA Obit owner DID
-func (o Obit) GetOwnerDID() properties.StringProperty {
-	return o.ownerDid
-}
-
-// GetObdDID returns OBADA Obit obd DID
-func (o Obit) GetObdDID() properties.StringProperty {
-	return o.obdDid
+// GetTrustAnchorToken returns OBADA Obit obd DID
+func (o Obit) GetTrustAnchorToken() properties.StringProperty {
+	return o.trustAnchorToken
 }
 
 // GetDocuments returns Obit documents
@@ -154,19 +137,17 @@ func (o Obit) GetChecksum(parentChecksum *hash.Hash) (hash.Hash, error) {
 		o.serialNumberHash.GetHash().GetDec() +
 		o.manufacturer.GetHash().GetDec() +
 		o.partNumber.GetHash().GetDec() +
-		o.ownerDid.GetHash().GetDec() +
-		o.obdDid.GetHash().GetDec() +
+		o.trustAnchorToken.GetHash().GetDec() +
 		documentsHash.GetDec()
 
 	if o.debug {
 		o.logger.Println(fmt.Sprintf(
-			"(%d + %d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
+			"(%d + %d + %d + %d + %d + %d) -> %d -> Dec2Hex(%d) -> %s",
 			o.obitID.GetHash().GetDec(),
 			o.serialNumberHash.GetHash().GetDec(),
 			o.manufacturer.GetHash().GetDec(),
 			o.partNumber.GetHash().GetDec(),
-			o.ownerDid.GetHash().GetDec(),
-			o.obdDid.GetHash().GetDec(),
+			o.trustAnchorToken.GetHash().GetDec(),
 			documentsHash.GetDec(),
 			sum,
 			sum,
