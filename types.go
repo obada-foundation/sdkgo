@@ -15,8 +15,7 @@ type ObitIDDto struct {
 // ObitDto todo add description
 type ObitDto struct {
 	ObitIDDto
-	OwnerDid string
-	ObdDid   string
+	TrustAnchorToken string
 }
 
 // Obit represent asset data structure
@@ -25,8 +24,7 @@ type Obit struct {
 	serialNumberHash properties.StringProperty
 	manufacturer     properties.StringProperty
 	partNumber       properties.StringProperty
-	ownerDid         properties.StringProperty
-	obdDid           properties.StringProperty
+	trustAnchorToken properties.StringProperty
 	documents        properties.Documents
 	debug            bool
 	logger           *log.Logger

@@ -29,8 +29,7 @@ func TestSdk_NewObit(t *testing.T) {
 	dto.SerialNumberHash = "s"
 	dto.Manufacturer = "s"
 	dto.PartNumber = "s"
-	dto.OwnerDid = "did:obada:owner:123456"
-	dto.ObdDid = "did:obada:obd:1234"
+	dto.TrustAnchorToken = ""
 
 	_, err = sdk.NewObit(dto)
 
