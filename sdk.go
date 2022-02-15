@@ -7,7 +7,7 @@ import (
 	"github.com/obada-foundation/sdkgo/properties"
 )
 
-const obadaReleaseDateUTC = 1624387536
+const obadaReleaseDateUTC = 1644864441
 
 // Sdk OBADA SDK
 type Sdk struct {
