@@ -13,8 +13,7 @@ func TestObit(t *testing.T) {
 		serialNumberHash string
 		manufacturer     string
 		partNumber       string
-		obdDid           string
-		ownerDid         string
+		trustAnchorToken string
 		checksum         string
 	}
 
@@ -44,8 +43,7 @@ func TestObit(t *testing.T) {
 						Manufacturer:     "Sony",
 						PartNumber:       "PN123456",
 					},
-					ObdDid:   "did:obada:obd:1234",
-					OwnerDid: "did:obada:owner:123456",
+					TrustAnchorToken: "",
 				},
 				parentChecksum: nil,
 			},
@@ -53,9 +51,8 @@ func TestObit(t *testing.T) {
 				serialNumberHash: "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03",
 				manufacturer:     "Sony",
 				partNumber:       "PN123456",
-				obdDid:           "did:obada:obd:1234",
-				ownerDid:         "did:obada:owner:123456",
-				checksum:         "af9d7cf448738b105f9ba35230bb5fd6c0e8c295b2be78bd5f7c1278870eb416",
+				trustAnchorToken: "",
+				checksum:         "2cd29b69ff050bbd186b5cd27d6435731e66d6cd8c77d5922e472625c61538f8",
 			},
 		},
 		{
@@ -67,8 +64,7 @@ func TestObit(t *testing.T) {
 						Manufacturer:     "Sony",
 						PartNumber:       "PN123456",
 					},
-					ObdDid:   "did:obada:obd:1234",
-					OwnerDid: "did:obada:owner:123456",
+					TrustAnchorToken: "",
 				},
 				parentChecksum: &h,
 			},
@@ -76,9 +72,8 @@ func TestObit(t *testing.T) {
 				serialNumberHash: "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03",
 				manufacturer:     "Sony",
 				partNumber:       "PN123456",
-				obdDid:           "did:obada:obd:1234",
-				ownerDid:         "did:obada:owner:123456",
-				checksum:         "20e48ddaf574116ca9ffd0d0c6538dae10c276c124d6e89408ac634a25235616",
+				trustAnchorToken: "",
+				checksum:         "565ade1e624fdccb0cdbd7e88d9cd2655533fecdd764378757638eaae3f1ece6",
 			},
 		},
 	}
@@ -118,12 +113,8 @@ func TestObit(t *testing.T) {
 			t.Errorf("obit.GetPartNumber() = %q, want %q", obit.GetPartNumber().GetValue(), tc.want.partNumber)
 		}
 
-		if tc.want.obdDid != obit.GetObdDID().GetValue() {
-			t.Errorf("obit.GetObdDID() = %q, want %q", obit.GetObdDID().GetValue(), tc.want.obdDid)
-		}
-
-		if tc.want.ownerDid != obit.GetOwnerDID().GetValue() {
-			t.Errorf("obit.GetOwnerDID() = %q, want %q", obit.GetOwnerDID().GetValue(), tc.want.ownerDid)
+		if tc.want.trustAnchorToken != obit.GetTrustAnchorToken().GetValue() {
+			t.Errorf("obit.GetTrustAnchorToken() = %q, want %q", obit.GetTrustAnchorToken().GetValue(), tc.want.trustAnchorToken)
 		}
 
 		checksum, err := obit.GetChecksum(tc.args.parentChecksum)
