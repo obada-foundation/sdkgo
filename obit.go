@@ -82,8 +82,7 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
-	documentsProp, err := properties.NewDocumentsCollection(
-		dto.Documents,
+	documentsProp := properties.NewDocumentsCollection(
 		sdk.logger,
 		sdk.debug,
 	)
@@ -146,13 +145,18 @@ func (o Obit) GetChecksum(parentChecksum *hash.Hash) (hash.Hash, error) {
 		o.logger.Println("\n\n<|Obit checksum calculation|>")
 	}
 
+	documentsHash, err := o.documents.GetHash()
+	if err != nil {
+		return checksum, nil
+	}
+
 	sum := o.obitID.GetHash().GetDec() +
 		o.serialNumberHash.GetHash().GetDec() +
 		o.manufacturer.GetHash().GetDec() +
 		o.partNumber.GetHash().GetDec() +
 		o.ownerDid.GetHash().GetDec() +
 		o.obdDid.GetHash().GetDec() +
-		o.documents.GetHash().GetDec()
+		documentsHash.GetDec()
 
 	if o.debug {
 		o.logger.Println(fmt.Sprintf(
@@ -163,7 +167,7 @@ func (o Obit) GetChecksum(parentChecksum *hash.Hash) (hash.Hash, error) {
 			o.partNumber.GetHash().GetDec(),
 			o.ownerDid.GetHash().GetDec(),
 			o.obdDid.GetHash().GetDec(),
-			o.documents.GetHash().GetDec(),
+			documentsHash.GetDec(),
 			sum,
 			sum,
 			fmt.Sprintf("%x", sum),
@@ -180,8 +184,7 @@ func (o Obit) GetChecksum(parentChecksum *hash.Hash) (hash.Hash, error) {
 		sum += prhDec
 	}
 
-	checksum, err := hash.NewHash([]byte(fmt.Sprintf("%x", sum)), o.logger, o.debug)
-
+	checksum, err = hash.NewHash([]byte(fmt.Sprintf("%x", sum)), o.logger, o.debug)
 	if err != nil {
 		return checksum, err
 	}

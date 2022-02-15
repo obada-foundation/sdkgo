@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/go-playground/validator/v10"
-	"github.com/obada-foundation/sdkgo/properties"
 	"github.com/obada-foundation/sdkgo/tests"
 	"log"
 	"testing"
@@ -32,7 +31,6 @@ func TestSdk_NewObit(t *testing.T) {
 	dto.PartNumber = "s"
 	dto.OwnerDid = "did:obada:owner:123456"
 	dto.ObdDid = "did:obada:obd:1234"
-	dto.Documents = []properties.Doc{}
 
 	_, err = sdk.NewObit(dto)
 

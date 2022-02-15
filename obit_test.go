@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/obada-foundation/sdkgo/hash"
-	"github.com/obada-foundation/sdkgo/properties"
 	"log"
 	"testing"
 )
@@ -45,9 +44,8 @@ func TestObit(t *testing.T) {
 						Manufacturer:     "Sony",
 						PartNumber:       "PN123456",
 					},
-					ObdDid:    "did:obada:obd:1234",
-					OwnerDid:  "did:obada:owner:123456",
-					Documents: []properties.Doc{},
+					ObdDid:   "did:obada:obd:1234",
+					OwnerDid: "did:obada:owner:123456",
 				},
 				parentChecksum: nil,
 			},
@@ -69,9 +67,8 @@ func TestObit(t *testing.T) {
 						Manufacturer:     "Sony",
 						PartNumber:       "PN123456",
 					},
-					ObdDid:    "did:obada:obd:1234",
-					OwnerDid:  "did:obada:owner:123456",
-					Documents: []properties.Doc{},
+					ObdDid:   "did:obada:obd:1234",
+					OwnerDid: "did:obada:owner:123456",
 				},
 				parentChecksum: &h,
 			},

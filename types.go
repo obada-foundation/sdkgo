@@ -15,9 +15,8 @@ type ObitIDDto struct {
 // ObitDto todo add description
 type ObitDto struct {
 	ObitIDDto
-	OwnerDid  string `validate:"required"`
-	ObdDid    string
-	Documents []properties.Doc
+	OwnerDid string `validate:"required"`
+	ObdDid   string
 }
 
 // Obit represent asset data structure
