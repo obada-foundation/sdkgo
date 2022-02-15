@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/go-playground/validator/v10"
-	"github.com/obada-foundation/sdkgo/properties"
 	"github.com/obada-foundation/sdkgo/tests"
 	"log"
 	"testing"
-	"time"
 )
 
 func TestNewSdk(t *testing.T) {
@@ -33,21 +31,6 @@ func TestSdk_NewObit(t *testing.T) {
 	dto.PartNumber = "s"
 	dto.OwnerDid = "did:obada:owner:123456"
 	dto.ObdDid = "did:obada:obd:1234"
-	dto.Matadata = []properties.KV{{
-		Key: "color",
-		Value: "red",
-	}}
-	dto.StructuredData = []properties.KV{{
-		Key: "foo",
-		Value: "bar",
-	}}
-	dto.Documents = []properties.Doc{}
-	dto.Status = "STOLEN"
-	dto.ModifiedOn = time.Now().Unix()
-	dto.AlternateIDS = []string{
-		"1",
-		"2",
-	}
 
 	_, err = sdk.NewObit(dto)
 
@@ -91,8 +74,6 @@ func TestSdk_ObitIDDtoValidation(t *testing.T) {
 	}
 
 	var dto ObitIDDto
-
-	fmt.Println(len(dto.SerialNumberHash))
 
 	_, err = sdk.NewObitID(dto)
 

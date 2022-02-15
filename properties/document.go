@@ -3,85 +3,24 @@ package properties
 import (
 	"fmt"
 	"github.com/obada-foundation/sdkgo/hash"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"net/url"
 	"strconv"
 )
 
-// Doc is mapping struct to Obit documents
-type Doc struct {
-	Name     string
-	HashLink string
-}
-
-// HashLinkProperty represent a hash of the hash link source
-type HashLinkProperty struct {
-	hashLink string
-	hash     hash.Hash
-}
-
-// NewHashLinkProperty creates a new property and compute a hash of file under hash link
-func NewHashLinkProperty(description, hashLink string, logger *log.Logger, debug bool) (HashLinkProperty, error) {
-	var hlp HashLinkProperty
-
-	if debug {
-		logger.Printf("\n <|%s|> => NewStringProperty(%v)", description, hashLink)
-	}
-
-	u, err := url.Parse(hashLink)
-	if err != nil {
-		return hlp, err
-	}
-
-	resp, err := http.Get(u.String())
-	if err != nil {
-		return hlp, err
-	}
-	defer resp.Body.Close()
-
-	fileBytes, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return hlp, err
-	}
-
-	h, err := hash.NewHash(fileBytes, logger, debug)
-
-	if err != nil {
-		return hlp, err
-	}
-
-	hlp.hashLink = hashLink
-	hlp.hash = h
-
-	return hlp, nil
-}
-
-// GetHash returns hash of the file under hash link
-func (hlp HashLinkProperty) GetHash() hash.Hash {
-	return hlp.hash
-}
-
-// GetHashLink returns a document hash link
-func (hlp HashLinkProperty) GetHashLink() string {
-	return hlp.hashLink
-}
-
-// Document Obit document
+// Document is mapping struct to Obit documents
 type Document struct {
 	name     StringProperty
-	hashLink HashLinkProperty
+	link     StringProperty
+	dataHash StringProperty
 	hash     hash.Hash
 }
 
 // NewDocument creates a new Obit document
-func NewDocument(name, hashLink string, logger *log.Logger, debug bool) (Document, error) {
+func NewDocument(name, link, dataHash string, logger *log.Logger, debug bool) (Document, error) {
 	var d Document
 
 	if debug {
-		logger.Printf("\n |New document| => NewDocument(%q, %q)", name, hashLink)
+		logger.Printf("\n |New document| => NewDocument(%q, %q, %q)", name, link, dataHash)
 	}
 
 	n, err := NewStringProperty("New document name", name, logger, debug)
@@ -90,7 +29,13 @@ func NewDocument(name, hashLink string, logger *log.Logger, debug bool) (Documen
 		return d, err
 	}
 
-	hl, err := NewHashLinkProperty("New document hash link", hashLink, logger, debug)
+	hl, err := NewStringProperty("New document hash link", link, logger, debug)
+
+	if err != nil {
+		return d, err
+	}
+
+	dh, err := NewStringProperty("New document data hash", dataHash, logger, debug)
 
 	if err != nil {
 		return d, err
@@ -98,10 +43,11 @@ func NewDocument(name, hashLink string, logger *log.Logger, debug bool) (Documen
 
 	nh := n.GetHash()
 	hlh := hl.GetHash()
-	docDec := nh.GetDec() + hlh.GetDec()
+	dhh := dh.GetHash()
+	docDec := nh.GetDec() + hlh.GetDec() + dhh.GetDec()
 
 	if debug {
-		logger.Printf("(%d + %d) -> %d", nh.GetDec(), hlh.GetDec(), docDec)
+		logger.Printf("(%d + %d + %d) -> %d", nh.GetDec(), hlh.GetDec(), dhh.GetDec(), docDec)
 	}
 
 	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), logger, debug)
@@ -111,7 +57,8 @@ func NewDocument(name, hashLink string, logger *log.Logger, debug bool) (Documen
 	}
 
 	d.name = n
-	d.hashLink = hl
+	d.link = hl
+	d.dataHash = dh
 	d.hash = h
 
 	return d, nil
@@ -122,9 +69,14 @@ func (d *Document) GetName() StringProperty {
 	return d.name
 }
 
-// GetHashLink returns a document hash link
-func (d *Document) GetHashLink() HashLinkProperty {
-	return d.hashLink
+// GetLink returns a document hash link
+func (d *Document) GetLink() StringProperty {
+	return d.link
+}
+
+// GetDataHash returns a document data hash link
+func (d *Document) GetDataHash() StringProperty {
+	return d.dataHash
 }
 
 // GetHash returns a document hash
@@ -135,48 +87,45 @@ func (d *Document) GetHash() hash.Hash {
 // Documents slice of documents
 type Documents struct {
 	documents []Document
-	hash      hash.Hash
+	logger    *log.Logger
+	debug     bool
 }
 
 // NewDocumentsCollection creates the collection of documents
-func NewDocumentsCollection(docs []Doc, logger *log.Logger, debug bool) (Documents, error) {
-	var ds Documents
-	var docDec uint64
-	description := "Making documents hash"
-
-	if debug {
-		logger.Printf("\n <|%s|> => NewDocumentCollection(%v)", description, docs)
+func NewDocumentsCollection(logger *log.Logger, debug bool) Documents {
+	return Documents{
+		documents: make([]Document, 0),
+		debug:     debug,
+		logger:    logger,
 	}
+}
 
-	for _, doc := range docs {
-		description = "\t" + description + " :: creating document"
-
-		d, err := NewDocument(doc.Name, doc.HashLink, logger, debug)
-
-		if err != nil {
-			return ds, err
-		}
-
-		dh := d.GetHash()
-		docDec += dh.GetDec()
-
-		ds.documents = append(ds.documents, d)
-	}
-
-	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), logger, debug)
-
-	if err != nil {
-		return ds, fmt.Errorf("cannot hash %q: %w", docDec, err)
-	}
-
-	ds.hash = h
-
-	return ds, nil
+// AddDocument adds new document into Obit documents list
+func (ds Documents) AddDocument(d Document) {
+	ds.documents = append(ds.documents, d)
 }
 
 // GetHash returns a hash of documents collection
-func (ds Documents) GetHash() hash.Hash {
-	return ds.hash
+func (ds Documents) GetHash() (hash.Hash, error) {
+	var docDec uint64
+
+	description := "Making documents hash"
+
+	if ds.debug {
+		ds.logger.Printf("\n <|%s|> => %v", description, ds.documents)
+	}
+
+	for _, doc := range ds.documents {
+		docDec += doc.GetHash().GetDec()
+	}
+
+	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), ds.logger, ds.debug)
+
+	if err != nil {
+		return h, fmt.Errorf("cannot hash %q: %w", docDec, err)
+	}
+
+	return h, nil
 }
 
 // GetAll returns all Obit documents
