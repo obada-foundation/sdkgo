@@ -80,6 +80,22 @@ func (sdk *Sdk) NewObit(dto ObitDto) (Obit, error) {
 		return o, err
 	}
 
+	for _, doc := range dto.Documents {
+		d, err := properties.NewDocument(
+			doc["name"],
+			doc["uri"],
+			doc["uri_hash"],
+			sdk.logger,
+			sdk.debug,
+		)
+
+		if err != nil {
+			return o, err
+		}
+
+		documentsProp.AddDocument(d)
+	}
+
 	o.obitID = obitIDProp
 	o.serialNumberHash = snProp
 	o.manufacturer = manufacturerProp
