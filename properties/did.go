@@ -52,7 +52,7 @@ func NewDIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, l
 
 	fullUsn := base58.Encode([]byte(hashStr))
 
-	did.usn = fullUsn[:8]
+	did.usn = fullUsn[:12]
 	did.fullUsn = fullUsn
 
 	if debug {
