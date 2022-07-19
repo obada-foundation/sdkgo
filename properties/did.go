@@ -16,6 +16,28 @@ type DID struct {
 	hash    hash.Hash
 }
 
+// FromDID creates DID property from DID string
+func FromDID(did string, logger *log.Logger, debug bool) (DID, error) {
+	var d DID
+
+	hashStr := did[10:]
+
+	fullUsn := base58.Encode([]byte(hashStr))
+
+	d.did = did
+	d.fullUsn = fullUsn
+	d.usn = fullUsn[:12]
+
+	hash, err := hash.HashFromDID(hashStr, logger, debug)
+	if err != nil {
+		return d, fmt.Errorf("cannot create DID: %w", err)
+	}
+
+	d.hash = hash
+
+	return d, nil
+}
+
 // NewDIDProperty creates new DID from given arguments
 func NewDIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, logger *log.Logger, debug bool) (DID, error) {
 	var did DID

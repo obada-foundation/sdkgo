@@ -3,9 +3,10 @@ package properties
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/obada-foundation/sdkgo/tests"
 	"strings"
 	"testing"
+
+	"github.com/obada-foundation/sdkgo/tests"
 )
 
 func sha256gen(str string) string {
@@ -87,6 +88,27 @@ func TestNewObitDIDProperty(t *testing.T) {
 
 		if h.GetHash() != tc.hash {
 			t.Fatalf("Expected to to get hash %q but received %q", tc.hash, h.GetHash())
+		}
+
+		fromDID, err := FromDID(DID.GetDid(), logger, true)
+		if err != nil {
+			t.Fatal(err.Error())
+		}
+
+		if fromDID.GetHash().GetDec() != DID.GetHash().GetDec() {
+			t.Fatalf("Deciamls do not match")
+		}
+
+		if fromDID.GetHash().GetHash() != DID.GetHash().GetHash() {
+			t.Fatalf("Hashes do not match")
+		}
+
+		if fromDID.GetDid() != DID.GetDid() {
+			t.Fatalf("DIDs do not match")
+		}
+
+		if fromDID.GetUsn() != DID.GetUsn() {
+			t.Fatalf("USNs do not match")
 		}
 
 		buffStr := buff.String()

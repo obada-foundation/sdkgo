@@ -15,6 +15,23 @@ type Hash struct {
 	dec  uint64
 }
 
+// HashFromDID creates hash struct from DID hash
+func HashFromDID(hash string, logger *log.Logger, debug bool) (Hash, error) {
+	var h Hash
+	var debugStr string
+
+	hashDec, err := hashToDec(hash, logger, debug)
+	if err != nil {
+		logger.Println(debugStr)
+		return h, err
+	}
+
+	h.hash = hash
+	h.dec = hashDec
+
+	return h, nil
+}
+
 // NewHash creates a new OBADA hash
 func NewHash(value []byte, logger *log.Logger, debug bool) (Hash, error) {
 	var hash Hash
