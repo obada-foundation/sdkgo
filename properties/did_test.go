@@ -30,7 +30,7 @@ func TestNewObitDIDProperty(t *testing.T) {
 			serialNumberHash: sha256gen("SN123456X"),
 			manufacturer:     "SONY",
 			partNumber:       "PN123456S",
-			usn:              "31DGPLLf",
+			usn:              "31DGPLLfpckW",
 			fullUsn:          "31DGPLLfpckWXfvMVVBKwEeN6Lc1X3BmaBaqyRtNQimTfLeU35eymxYyMmDStWo46Cr2UtGZoapTBsvjvTwoSxYT",
 			did:              "did:obada:d7cf869423d12f623f5611e48d6f6665bbc4a270b6e09da2f4c32bcb1b949ecd",
 			hash:             "d7cf869423d12f623f5611e48d6f6665bbc4a270b6e09da2f4c32bcb1b949ecd",
