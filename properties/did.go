@@ -28,12 +28,12 @@ func FromDID(did string, logger *log.Logger, debug bool) (DID, error) {
 	d.fullUsn = fullUsn
 	d.usn = fullUsn[:12]
 
-	hash, err := hash.HashFromDID(hashStr, logger, debug)
+	h, err := hash.NewFromDID(hashStr, logger, debug)
 	if err != nil {
 		return d, fmt.Errorf("cannot create DID: %w", err)
 	}
 
-	d.hash = hash
+	d.hash = h
 
 	return d, nil
 }

@@ -15,8 +15,8 @@ type Hash struct {
 	dec  uint64
 }
 
-// HashFromDID creates hash struct from DID hash
-func HashFromDID(hash string, logger *log.Logger, debug bool) (Hash, error) {
+// NewFromDID creates hash struct from DID hash
+func NewFromDID(hash string, logger *log.Logger, debug bool) (Hash, error) {
 	var h Hash
 	var debugStr string
 
