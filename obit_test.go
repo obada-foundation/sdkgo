@@ -91,9 +91,9 @@ func TestObit(t *testing.T) {
 		var docs []properties.Document
 
 		for _, d := range tc.args.docs {
-			doc, err := sdk.NewDocument(d.name, d.link, d.checksum)
-			if err != nil {
-				t.Fatalf("Cannot create Document from the given data: (%v). Reason: %s", d, err.Error())
+			doc, er := sdk.NewDocument(d.name, d.link, d.checksum)
+			if er != nil {
+				t.Fatalf("Cannot create Document from the given data: (%v). Reason: %s", d, er.Error())
 			}
 
 			docs = append(docs, doc)

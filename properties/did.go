@@ -1,9 +1,10 @@
 package properties
 
 import (
-	"fmt"
 	"github.com/obada-foundation/sdkgo/base58"
 	"github.com/obada-foundation/sdkgo/hash"
+
+	"fmt"
 	"log"
 )
 
@@ -66,21 +67,21 @@ func NewDIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, l
 }
 
 // GetHash returns DID hash
-func (id *DID) GetHash() hash.Hash {
-	return id.hash
+func (did *DID) GetHash() hash.Hash {
+	return did.hash
 }
 
 // GetDid returns obit DID
-func (id *DID) GetDid() string {
-	return id.did
+func (did *DID) GetDid() string {
+	return did.did
 }
 
 // GetUsn returns short universal serial number
-func (id *DID) GetUsn() string {
-	return id.usn
+func (did *DID) GetUsn() string {
+	return did.usn
 }
 
 // GetFullUsn returns full universal serial number
-func (id *DID) GetFullUsn() string {
-	return id.fullUsn
+func (did *DID) GetFullUsn() string {
+	return did.fullUsn
 }
