@@ -115,12 +115,15 @@ func (ds *Documents) GetHash() (hash.Hash, error) {
 		ds.logger.Printf("\n <|%s|> => %v", description, ds.documents)
 	}
 
+	if len(ds.documents) == 1 {
+		return ds.documents[0].GetHash(), nil
+	}
+
 	for _, doc := range ds.documents {
 		docDec += doc.GetHash().GetDec()
 	}
 
 	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), ds.logger, ds.debug)
-
 	if err != nil {
 		return h, fmt.Errorf("cannot hash %q: %w", docDec, err)
 	}

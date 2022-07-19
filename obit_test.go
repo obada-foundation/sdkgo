@@ -58,15 +58,15 @@ func TestObit(t *testing.T) {
 			},
 			want: want{
 				did:      "did:obada:c7e24b72c739a5619d24dd8e87e1ea4a829a508166203661ea8eda7a8a0b5978",
-				checksum: "a979be1bee50a9fa015bf179673658d279c4c2f7705a5db12ce1e09c09247224",
+				checksum: "07f1f7d0f85d39e8ed7a9b4832db52118fcdbb9ca63d37c5c2e360bd20402225",
 			},
 		},
 		{
 			args: args{
-				serialNumber: "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03",
-				manufacturer: "Sony",
-				partNumber:   "PN123456",
-
+				serialNumber:   "6dc5b8ae0ffe78e0276f08a935afac98cf2fce6bd6f00a0188e90a7d1462db03",
+				manufacturer:   "Sony",
+				partNumber:     "PN123456",
+				docs:           []doc{},
 				parentChecksum: &h,
 			},
 			want: want{
@@ -121,7 +121,7 @@ func TestObit(t *testing.T) {
 
 		if tc.want.checksum != checksum.GetHash() {
 			fmt.Println(str.String())
-			t.Errorf("obit.Checksum(%v) = %q, want %q", tc.args.parentChecksum, checksum.GetHash(), tc.want.checksum)
+			t.Fatalf("obit.Checksum(%v) = %q, want %q", tc.args.parentChecksum, checksum.GetHash(), tc.want.checksum)
 		}
 
 		fmt.Println(str.String())

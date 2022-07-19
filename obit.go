@@ -22,8 +22,8 @@ func (sdk *Sdk) NewObit(did properties.DID, docs properties.Documents) (Obit, er
 	return o, nil
 }
 
-// GetObitID returns obit ID
-func (o *Obit) GetObitID() properties.DID {
+// GetDID returns obit DID
+func (o *Obit) GetDID() properties.DID {
 	return o.obitDID
 }
 
