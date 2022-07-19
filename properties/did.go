@@ -7,17 +7,17 @@ import (
 	"log"
 )
 
-// ObitID represent obit identifier
-type ObitID struct {
+// DID represent obit decentralized identifier
+type DID struct {
 	usn     string
 	fullUsn string
 	did     string
 	hash    hash.Hash
 }
 
-// NewObitIDProperty creates new ObitID from given arguments
-func NewObitIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, logger *log.Logger, debug bool) (ObitID, error) {
-	var id ObitID
+// NewDIDProperty creates new DID from given arguments
+func NewDIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, logger *log.Logger, debug bool) (DID, error) {
+	var did DID
 
 	snhHash := serialNumberHash.GetHash()
 	mh := manufacturer.GetHash()
@@ -27,8 +27,8 @@ func NewObitIDProperty(serialNumberHash, manufacturer, partNumber StringProperty
 
 	if debug {
 		logger.Printf(
-			"\n<|%s|> => NewObitIDProperty(%v, %v, %v) -> (%d + %d + %d) -> %d",
-			"Making ObitID",
+			"\n<|%s|> => NewDIDProperty(%v, %v, %v) -> (%d + %d + %d) -> %d",
+			"Making DID",
 			serialNumberHash,
 			manufacturer,
 			partNumber,
@@ -42,45 +42,45 @@ func NewObitIDProperty(serialNumberHash, manufacturer, partNumber StringProperty
 	h, err := hash.NewHash([]byte(fmt.Sprintf("%x", sum)), logger, debug)
 
 	if err != nil {
-		return id, fmt.Errorf("cannot create obit id: %w", err)
+		return did, fmt.Errorf("cannot create DID: %w", err)
 	}
 
 	hashStr := h.GetHash()
 
-	id.hash = h
-	id.did = "did:obada:" + hashStr
+	did.hash = h
+	did.did = "did:obada:" + hashStr
 
 	fullUsn := base58.Encode([]byte(hashStr))
 
-	id.usn = fullUsn[:8]
-	id.fullUsn = fullUsn
+	did.usn = fullUsn[:8]
+	did.fullUsn = fullUsn
 
 	if debug {
 		logger.Printf("Hash: %s", h.GetHash())
-		logger.Printf("Did: %s", id.did)
-		logger.Printf("Usn: %s", id.usn)
-		logger.Printf("Full Usn: %s", id.fullUsn)
+		logger.Printf("Did: %s", did.did)
+		logger.Printf("Usn: %s", did.usn)
+		logger.Printf("Full Usn: %s", did.fullUsn)
 	}
 
-	return id, nil
+	return did, nil
 }
 
-// GetHash returns ObitID hash
-func (id *ObitID) GetHash() hash.Hash {
+// GetHash returns DID hash
+func (id *DID) GetHash() hash.Hash {
 	return id.hash
 }
 
 // GetDid returns obit DID
-func (id *ObitID) GetDid() string {
+func (id *DID) GetDid() string {
 	return id.did
 }
 
 // GetUsn returns short universal serial number
-func (id *ObitID) GetUsn() string {
+func (id *DID) GetUsn() string {
 	return id.usn
 }
 
 // GetFullUsn returns full universal serial number
-func (id *ObitID) GetFullUsn() string {
+func (id *DID) GetFullUsn() string {
 	return id.fullUsn
 }

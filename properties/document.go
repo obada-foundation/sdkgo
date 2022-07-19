@@ -11,16 +11,16 @@ import (
 type Document struct {
 	name     StringProperty
 	link     StringProperty
-	dataHash StringProperty
+	checksum StringProperty
 	hash     hash.Hash
 }
 
 // NewDocument creates a new Obit document
-func NewDocument(name, link, dataHash string, logger *log.Logger, debug bool) (Document, error) {
+func NewDocument(name, link, docChecksum string, logger *log.Logger, debug bool) (Document, error) {
 	var d Document
 
 	if debug {
-		logger.Printf("\n |New document| => NewDocument(%q, %q, %q)", name, link, dataHash)
+		logger.Printf("\n |New document| => NewDocument(%q, %q, %q)", name, link, docChecksum)
 	}
 
 	n, err := NewStringProperty("New document name", name, logger, debug)
@@ -35,7 +35,7 @@ func NewDocument(name, link, dataHash string, logger *log.Logger, debug bool) (D
 		return d, err
 	}
 
-	dh, err := NewStringProperty("New document data hash", dataHash, logger, debug)
+	dc, err := NewStringProperty("New document checksum", docChecksum, logger, debug)
 
 	if err != nil {
 		return d, err
@@ -43,11 +43,11 @@ func NewDocument(name, link, dataHash string, logger *log.Logger, debug bool) (D
 
 	nh := n.GetHash()
 	hlh := hl.GetHash()
-	dhh := dh.GetHash()
-	docDec := nh.GetDec() + hlh.GetDec() + dhh.GetDec()
+	dch := dc.GetHash()
+	docDec := nh.GetDec() + hlh.GetDec() + dch.GetDec()
 
 	if debug {
-		logger.Printf("(%d + %d + %d) -> %d", nh.GetDec(), hlh.GetDec(), dhh.GetDec(), docDec)
+		logger.Printf("(%d + %d + %d) -> %d", nh.GetDec(), hlh.GetDec(), dch.GetDec(), docDec)
 	}
 
 	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), logger, debug)
@@ -58,7 +58,7 @@ func NewDocument(name, link, dataHash string, logger *log.Logger, debug bool) (D
 
 	d.name = n
 	d.link = hl
-	d.dataHash = dh
+	d.checksum = dc
 	d.hash = h
 
 	return d, nil
@@ -74,9 +74,9 @@ func (d *Document) GetLink() StringProperty {
 	return d.link
 }
 
-// GetDataHash returns a document data hash link
-func (d *Document) GetDataHash() StringProperty {
-	return d.dataHash
+// GetChecksum returns a document data hash link
+func (d *Document) GetChecksum() StringProperty {
+	return d.checksum
 }
 
 // GetHash returns a document hash
@@ -101,12 +101,12 @@ func NewDocumentsCollection(logger *log.Logger, debug bool) Documents {
 }
 
 // AddDocument adds new document into Obit documents list
-func (ds Documents) AddDocument(d Document) {
+func (ds *Documents) AddDocument(d Document) {
 	ds.documents = append(ds.documents, d)
 }
 
 // GetHash returns a hash of documents collection
-func (ds Documents) GetHash() (hash.Hash, error) {
+func (ds *Documents) GetHash() (hash.Hash, error) {
 	var docDec uint64
 
 	description := "Making documents hash"
@@ -129,6 +129,6 @@ func (ds Documents) GetHash() (hash.Hash, error) {
 }
 
 // GetAll returns all Obit documents
-func (ds Documents) GetAll() []Document {
+func (ds *Documents) GetAll() []Document {
 	return ds.documents
 }

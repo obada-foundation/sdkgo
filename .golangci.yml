@@ -26,17 +26,15 @@ linters-settings:
       - experimental
     disabled-checks:
       - wrapperFunc
-      # TODO: feel free to remove these excludes and fix the code
+# TODO: feel free to remove these excludes and fix the code
       - hugeParam
       - rangeValCopy
-      - singleCaseSwitch
-      - ifElseChain
 
 linters:
   enable:
     - bodyclose
     - megacheck
-    - golint
+    - revive
     - govet
     - unconvert
     - megacheck
@@ -74,6 +72,3 @@ issues:
         - gosec
         - dupl
   exclude-use-default: false
-
-service:
-  golangci-lint-version: 1.39.x

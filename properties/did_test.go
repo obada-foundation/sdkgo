@@ -15,7 +15,7 @@ func sha256gen(str string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func TestNewObitIDProperty(t *testing.T) {
+func TestNewObitDIDProperty(t *testing.T) {
 	testCases := []struct {
 		serialNumberHash string
 		manufacturer     string
@@ -35,7 +35,7 @@ func TestNewObitIDProperty(t *testing.T) {
 			did:              "did:obada:d7cf869423d12f623f5611e48d6f6665bbc4a270b6e09da2f4c32bcb1b949ecd",
 			hash:             "d7cf869423d12f623f5611e48d6f6665bbc4a270b6e09da2f4c32bcb1b949ecd",
 			logMsg: []string{
-				"<|Making ObitID|> => NewObitIDProperty",
+				"<|Making DID|> => NewDIDProperty",
 				"Hash: d7cf869423d12f623f5611e48d6f6665bbc4a270b6e09da2f4c32bcb1b949ecd",
 				"Did: did:obada:d7cf869423d12f623f5611e48d6f6665bbc4a270b6e09da2f4c32bcb1b949ecd",
 				"Hash: d7cf869423d12f623f5611e48d6f6665bbc4a270b6e09da2f4c32bcb1b949ecd",
@@ -65,25 +65,25 @@ func TestNewObitIDProperty(t *testing.T) {
 			t.Fatalf(err.Error())
 		}
 
-		obitID, err := NewObitIDProperty(snh, m, pn, logger, true)
+		DID, err := NewDIDProperty(snh, m, pn, logger, true)
 
 		if err != nil {
 			t.Fatalf(err.Error())
 		}
 
-		if obitID.GetUsn() != tc.usn {
-			t.Fatalf("Expected to to get usn %q but received %q", tc.usn, obitID.GetUsn())
+		if DID.GetUsn() != tc.usn {
+			t.Fatalf("Expected to to get usn %q but received %q", tc.usn, DID.GetUsn())
 		}
 
-		if obitID.GetFullUsn() != tc.fullUsn {
-			t.Fatalf("Expected to to get usn %q but received %q", tc.fullUsn, obitID.GetFullUsn())
+		if DID.GetFullUsn() != tc.fullUsn {
+			t.Fatalf("Expected to to get usn %q but received %q", tc.fullUsn, DID.GetFullUsn())
 		}
 
-		if obitID.GetDid() != tc.did {
-			t.Fatalf("Expected to to get did %q but received %q", tc.did, obitID.GetDid())
+		if DID.GetDid() != tc.did {
+			t.Fatalf("Expected to to get did %q but received %q", tc.did, DID.GetDid())
 		}
 
-		h := obitID.GetHash()
+		h := DID.GetHash()
 
 		if h.GetHash() != tc.hash {
 			t.Fatalf("Expected to to get hash %q but received %q", tc.hash, h.GetHash())
@@ -99,12 +99,12 @@ func TestNewObitIDProperty(t *testing.T) {
 	}
 }
 
-func TestNewObitIDPropertyWithNoLog(t *testing.T) {
+func TestNewDIDPropertyWithNoLog(t *testing.T) {
 	logger, buff := tests.CreateSdkTestLogger()
 
 	var snh, m, pn StringProperty
 
-	if _, err := NewObitIDProperty(snh, m, pn, logger, false); err != nil {
+	if _, err := NewDIDProperty(snh, m, pn, logger, false); err != nil {
 		t.Fatalf(err.Error())
 	}
 
