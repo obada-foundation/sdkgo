@@ -28,7 +28,7 @@ func FromDID(did string, logger *log.Logger, debug bool) (DID, error) {
 	d.fullUsn = fullUsn
 	d.usn = fullUsn[:12]
 
-	h, err := hash.NewFromDID(hashStr, logger, debug)
+	h, err := hash.NewFromDID(hashStr, logger)
 	if err != nil {
 		return d, fmt.Errorf("cannot create DID: %w", err)
 	}
@@ -62,7 +62,7 @@ func NewDIDProperty(serialNumberHash, manufacturer, partNumber StringProperty, l
 		)
 	}
 
-	h, err := hash.NewHash([]byte(fmt.Sprintf("%x", sum)), logger, debug)
+	h, err := hash.NewHash([]byte(fmt.Sprintf("%x", sum)), logger)
 
 	if err != nil {
 		return did, fmt.Errorf("cannot create DID: %w", err)

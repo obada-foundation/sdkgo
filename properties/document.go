@@ -23,19 +23,19 @@ func NewDocument(name, link, docChecksum string, logger *log.Logger, debug bool)
 		logger.Printf("\n |New document| => NewDocument(%q, %q, %q)", name, link, docChecksum)
 	}
 
-	n, err := NewStringProperty("New document name", name, logger, debug)
+	n, err := NewStringProperty("New document name", name, logger)
 
 	if err != nil {
 		return d, err
 	}
 
-	hl, err := NewStringProperty("New document hash link", link, logger, debug)
+	hl, err := NewStringProperty("New document hash link", link, logger)
 
 	if err != nil {
 		return d, err
 	}
 
-	dc, err := NewStringProperty("New document checksum", docChecksum, logger, debug)
+	dc, err := NewStringProperty("New document checksum", docChecksum, logger)
 
 	if err != nil {
 		return d, err
@@ -50,7 +50,7 @@ func NewDocument(name, link, docChecksum string, logger *log.Logger, debug bool)
 		logger.Printf("(%d + %d + %d) -> %d", nh.GetDec(), hlh.GetDec(), dch.GetDec(), docDec)
 	}
 
-	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), logger, debug)
+	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), logger)
 
 	if err != nil {
 		return d, err
@@ -123,7 +123,7 @@ func (ds *Documents) GetHash() (hash.Hash, error) {
 		docDec += doc.GetHash().GetDec()
 	}
 
-	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), ds.logger, ds.debug)
+	h, err := hash.NewHash([]byte(strconv.FormatUint(docDec, 10)), ds.logger)
 	if err != nil {
 		return h, fmt.Errorf("cannot hash %q: %w", docDec, err)
 	}

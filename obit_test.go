@@ -35,7 +35,7 @@ func TestObit(t *testing.T) {
 		want want
 	}
 
-	h, err := hash.NewHash([]byte("some data"), nil, false)
+	h, err := hash.NewHash([]byte("some data"), nil)
 
 	if err != nil {
 		t.Fatal(err)

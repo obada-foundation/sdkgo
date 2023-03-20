@@ -13,15 +13,14 @@ type StringProperty struct {
 }
 
 // NewStringProperty creates a new obit property from the string
-func NewStringProperty(description, value string, logger *log.Logger, debug bool) (StringProperty, error) {
+func NewStringProperty(description, value string, logger *log.Logger) (StringProperty, error) {
 	var sp StringProperty
 
-	if debug {
-		logger.Printf("\n <|%s|> => NewStringProperty(%v)", description, sp)
+	if logger != nil {
+		logger.Printf("\n <|%s|> => NewStringProperty(%q)", description, value)
 	}
 
-	h, err := hash.NewHash([]byte(value), logger, debug)
-
+	h, err := hash.NewHash([]byte(value), logger)
 	if err != nil {
 		return sp, fmt.Errorf("cannot hash %q: %w", value, err)
 	}

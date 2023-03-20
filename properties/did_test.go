@@ -48,19 +48,19 @@ func TestNewObitDIDProperty(t *testing.T) {
 	for _, tc := range testCases {
 		logger, buff := tests.CreateSdkTestLogger()
 
-		snh, err := NewStringProperty("", tc.serialNumberHash, nil, false)
+		snh, err := NewStringProperty("", tc.serialNumberHash, nil)
 
 		if err != nil {
 			t.Fatalf(err.Error())
 		}
 
-		m, err := NewStringProperty("", tc.manufacturer, nil, false)
+		m, err := NewStringProperty("", tc.manufacturer, nil)
 
 		if err != nil {
 			t.Fatalf(err.Error())
 		}
 
-		pn, err := NewStringProperty("", tc.partNumber, nil, false)
+		pn, err := NewStringProperty("", tc.partNumber, nil)
 
 		if err != nil {
 			t.Fatalf(err.Error())

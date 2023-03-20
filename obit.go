@@ -69,7 +69,7 @@ func (o *Obit) GetChecksum(parentChecksum *hash.Hash) (hash.Hash, error) {
 		sum += prhDec
 	}
 
-	checksum, err = hash.NewHash([]byte(fmt.Sprintf("%x", sum)), o.logger, o.debug)
+	checksum, err = hash.NewHash([]byte(fmt.Sprintf("%x", sum)), o.logger)
 	if err != nil {
 		return checksum, err
 	}

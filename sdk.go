@@ -56,7 +56,6 @@ func (sdk *Sdk) NewObitDID(serialNumber, manufacturer, partNumber string) (prope
 		"Making serialNumber",
 		serialNumber,
 		sdk.logger,
-		sdk.debug,
 	)
 
 	if err != nil {
@@ -67,7 +66,6 @@ func (sdk *Sdk) NewObitDID(serialNumber, manufacturer, partNumber string) (prope
 		"Making manufacturer",
 		manufacturer,
 		sdk.logger,
-		sdk.debug,
 	)
 
 	if err != nil {
@@ -78,7 +76,6 @@ func (sdk *Sdk) NewObitDID(serialNumber, manufacturer, partNumber string) (prope
 		"Making partNumber",
 		partNumber,
 		sdk.logger,
-		sdk.debug,
 	)
 
 	if err != nil {
