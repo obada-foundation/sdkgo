@@ -89,9 +89,9 @@ func MakeDID(newDID NewDID) (did *DID, err error) {
 	defer func(logger *log.Logger) {
 		if logger != nil {
 			logger.Printf("Hash: %s", h.GetHash())
-			logger.Printf("Did: %s", did.did)
-			logger.Printf("Usn: %s", did.usn)
-			logger.Printf("Full Usn: %s", did.fullUSN)
+			logger.Printf("DID: %s", did.did)
+			logger.Printf("USN: %s", did.usn)
+			logger.Printf("Full USN: %s", did.fullUSN)
 		}
 	}(newDID.Logger)
 

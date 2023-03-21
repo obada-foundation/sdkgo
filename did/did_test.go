@@ -1,6 +1,7 @@
 package did_test
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -30,6 +31,7 @@ type testCase struct {
 	did        string
 	fullUSN    string
 	usn        string
+	hash       string
 	withLogger bool
 }
 
@@ -59,6 +61,7 @@ func TestDID(t *testing.T) {
 			did:        "did:obada:64925be84b586363670c1f7e5ada86a37904e590d1f6570d834436331dd3eb88",
 			fullUSN:    "25rc8AxGbLSrbZGXYAdKJoGXZUrn3XUZ2cM8SkZUS1AYy2f8meQ3X8HKvUzHX6sFGo2JM5jpc5ywEJLCrcip4SBh",
 			usn:        "25rc8AxGbLSr",
+			hash:       "64925be84b586363670c1f7e5ada86a37904e590d1f6570d834436331dd3eb88",
 			withLogger: true,
 		},
 	}
@@ -86,13 +89,19 @@ func TestDID(t *testing.T) {
 
 		if tc.withLogger {
 			logs := strings.Split(loggerStr.String(), "\n")
-			assert.Equal(t, logPrefix+"MakeDID(\"SN123456X\", \"SONY\", \"PN123456S\")", logs[0])
+			assert.Equal(
+				t,
+				logPrefix+fmt.Sprintf("MakeDID(%q, %q, %q)", tc.newDID.SerialNumber, tc.newDID.Manufacturer, tc.newDID.PartNumber),
+				logs[0],
+			)
 
-			assert.Equal(t, " <|Making serialNumber|> => NewStringProperty(\"SN123456X\")", logs[2])
-			assert.Equal(t, logPrefix+"SHA256(\"SN123456X\") -> \"cae6b797ae2627d96689fed03adc28311d5f2175253c3a0e375301e225ddf44d\"", logs[3])
-			assert.Equal(t, logPrefix+"Get8CharsFromHash(\"cae6b797ae2627d96689fed03adc28311d5f2175253c3a0e375301e225ddf44d\") -> \"cae6b797\" -> Hex2Dec(\"cae6b797\") -> 3404117911", logs[4])
-
-			assert.Equal(t, " <|Making manufacturer|> => NewStringProperty(\"SONY\")", logs[6])
+			assert.Equal(t, fmt.Sprintf(" <|Making serialNumber|> => NewStringProperty(%q)", tc.newDID.SerialNumber), logs[2])
+			assert.Equal(t, fmt.Sprintf(" <|Making manufacturer|> => NewStringProperty(%q)", tc.newDID.Manufacturer), logs[6])
+			assert.Equal(t, fmt.Sprintf(" <|Making partNumber|> => NewStringProperty(%q)", tc.newDID.PartNumber), logs[10])
+			assert.Equal(t, fmt.Sprintf(logPrefix+"Hash: %s", tc.hash), logs[17])
+			assert.Equal(t, fmt.Sprintf(logPrefix+"DID: %s", tc.did), logs[18])
+			assert.Equal(t, fmt.Sprintf(logPrefix+"USN: %s", tc.usn), logs[19])
+			assert.Equal(t, fmt.Sprintf(logPrefix+"Full USN: %s", tc.fullUSN), logs[20])
 		}
 	}
 }

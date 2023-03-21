@@ -2,8 +2,9 @@ package properties
 
 import (
 	"fmt"
-	"github.com/obada-foundation/sdkgo/hash"
 	"log"
+
+	"github.com/obada-foundation/sdkgo/hash"
 )
 
 // StringProperty represent a string property and string hash

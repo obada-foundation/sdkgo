@@ -1,10 +1,11 @@
 package properties
 
 import (
-	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/obada-foundation/sdkgo/hash"
 )
 
 func TestNewStringProperty(t *testing.T) {
