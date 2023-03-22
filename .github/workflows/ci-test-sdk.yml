@@ -32,7 +32,11 @@ jobs:
         working-directory: .
         env:
           GOFLAGS: "-mod=vendor"
-          TZ: "America/Chicago"
+          TZ: "America/New_York"
+
+      - name: install goveralls
+        run: |
+          GO111MODULE=off go get -u github.com/mattn/goveralls
 
       - name: submit coverage
         run: $(go env GOPATH)/bin/goveralls -service="github" -coverprofile=$GITHUB_WORKSPACE/profile.cov
