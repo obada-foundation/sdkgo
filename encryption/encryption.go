@@ -1,3 +1,4 @@
+// Package encryption provides encrypt/descrypt functionality for OBADA needs
 package encryption
 
 import (

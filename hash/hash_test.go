@@ -6,10 +6,6 @@ import (
 	"testing"
 )
 
-func TestErrorsWhenTryingToCreateHash(t *testing.T) {
-
-}
-
 func TestNewHash(t *testing.T) {
 	logger := log.New(os.Stdout, "TESTING SDK :: ", 0)
 

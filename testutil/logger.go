@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// TestLogger creates logger that writes to bytes buffer instead of stdout
 func TestLogger(prefix string) (*log.Logger, *bytes.Buffer) {
 	var logStr bytes.Buffer
 

@@ -1,3 +1,8 @@
+// Package hash provides a Hash struct that represents a string value as a hash or as a decimal.
+// The package also provides functions to create a new Hash struct from a DID string or a byte slice,
+// get the hash string or decimal value from a Hash struct, and compute the sum of given hashes.
+// Please note that some hashing rules (like SumHashes) reprecented here
+// are very specific for OBADA needs and may unsecure for you.
 package hash
 
 import (

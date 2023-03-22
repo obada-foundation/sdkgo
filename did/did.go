@@ -1,3 +1,4 @@
+// Package did provides functionality for OBADA DID creation and parsing
 package did
 
 import (
@@ -10,14 +11,14 @@ import (
 	"github.com/obada-foundation/sdkgo/properties"
 )
 
-// DefaultUsnLength
+// DefaultUSNLength the default length of Universal Serial Number
 const DefaultUSNLength = 12
 
 // ObadaDIDMethod DID Method for OBADA protocol
 // https://www.w3.org/TR/did-core/#dfn-did-methods
 const ObadaDIDMethod = "did:obada:"
 
-// OBADA DID
+// DID represent OBADA DID
 type DID struct {
 	// Universal serial number with limited length
 	usn     string
@@ -26,6 +27,7 @@ type DID struct {
 	hash    hash.Hash
 }
 
+// NewDID combines serial number, manufacturer and part number to generate DID
 type NewDID struct {
 	SerialNumber string
 	Manufacturer string
@@ -108,7 +110,7 @@ func (did DID) GetHash() hash.Hash {
 	return did.hash
 }
 
-// GetDID returns DID string
+// String returns DID string
 func (did DID) String() string {
 	return did.did
 }
@@ -123,13 +125,13 @@ func (did DID) GetFullUSN() string {
 	return did.fullUSN
 }
 
-// DIDFromString creates DID struct from string
-func DIDFromString(DIDStr string, logger *log.Logger) (*DID, error) {
-	if !strings.HasPrefix(DIDStr, ObadaDIDMethod) {
+// FromString creates DID struct from DID string
+func FromString(str string, logger *log.Logger) (*DID, error) {
+	if !strings.HasPrefix(str, ObadaDIDMethod) {
 		return nil, ErrNotSupportedDIDMethod
 	}
 
-	hashStr := DIDStr[len(ObadaDIDMethod):]
+	hashStr := str[len(ObadaDIDMethod):]
 
 	fullUSN := base58.Encode([]byte(hashStr))
 
@@ -139,7 +141,7 @@ func DIDFromString(DIDStr string, logger *log.Logger) (*DID, error) {
 	}
 
 	return &DID{
-		did:     DIDStr,
+		did:     str,
 		fullUSN: fullUSN,
 		usn:     fullUSN[:DefaultUSNLength],
 		hash:    h,

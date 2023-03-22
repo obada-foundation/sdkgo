@@ -19,7 +19,7 @@ func TestDIDFromString(t *testing.T) {
 	}
 
 	for _, DID := range tcs {
-		_, err := did.DIDFromString(DID, nil)
+		_, err := did.FromString(DID, nil)
 		require.ErrorIs(t, err, did.ErrNotSupportedDIDMethod)
 	}
 
@@ -35,7 +35,7 @@ type testCase struct {
 	withLogger bool
 }
 
-func TestDID(t *testing.T) {
+func TestMakeDID(t *testing.T) {
 	tcs := []testCase{
 		{
 			newDID: did.NewDID{
@@ -79,7 +79,7 @@ func TestDID(t *testing.T) {
 			require.NoError(t, err)
 		}
 
-		DIDFromStr, err := did.DIDFromString(DID.String(), tc.newDID.Logger)
+		DIDFromStr, err := did.FromString(DID.String(), tc.newDID.Logger)
 		require.NoError(t, err)
 
 		assert.Equal(t, tc.did, DID.String())
