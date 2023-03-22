@@ -1,5 +1,5 @@
 <div align="center">
-  <img class="logo" src="https://www.obada.io/logo/obada-logo-light.svg" alt="OBADA | SDK"/>
+  <img class="logo" src="https://www.obada.io/assets/logo/obada-logo-light.svg" alt="OBADA | SDK"/>
 </div>
 
 The “sdkgo”, is a library written in Go and implements some foundational principals of OBADA protocol, such as Obit, ObitID, USN and checksum generation.
