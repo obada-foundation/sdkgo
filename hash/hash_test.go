@@ -151,10 +151,19 @@ func TestSumHashes(t *testing.T) {
 		if tc.withLogger {
 			logs := strings.Split(loggerStr.String(), "\n")
 
-			assert.Equal(t, fmt.Sprint("Hashes sum :: "), logs[0])
+			assert.Equal(t, "Hashes sum :: ", logs[0])
 			assert.Equal(t, fmt.Sprintf("<|Computing sum of hashes|> => SumHashes([]) -> ([]) -> %d", sum), logs[1])
 		}
 	}
 }
 
-func TestFromString(t *testing.T) {}
+func TestFromString(t *testing.T) {
+	testCasesError := []string{
+		"",
+	}
+
+	for _, hashStr := range testCasesError {
+		_, err := FromString(hashStr, nil)
+		assert.Equal(t, "given string is not sha256 hash", err.Error())
+	}
+}
