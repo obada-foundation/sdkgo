@@ -47,7 +47,6 @@ func FromString(hash string, logger *log.Logger) (Hash, error) {
 // NewHash creates a new OBADA hash
 func NewHash(value []byte, logger *log.Logger) (Hash, error) {
 	var hash Hash
-	var debugStr string
 
 	h := sha256.New()
 
@@ -64,7 +63,6 @@ func NewHash(value []byte, logger *log.Logger) (Hash, error) {
 	hashDec, err := hashToDec(hashStr, logger)
 
 	if err != nil {
-		logger.Println(debugStr)
 		return hash, err
 	}
 
