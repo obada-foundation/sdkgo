@@ -20,9 +20,18 @@ type Hash struct {
 	dec  uint64
 }
 
-// NewFromDID creates hash struct from DID string
-func NewFromDID(hash string, logger *log.Logger) (Hash, error) {
+// FromString creates hash struct from string sha256
+func FromString(hash string, logger *log.Logger) (Hash, error) {
 	var h Hash
+
+	match, err := regexp.MatchString("^[a-f0-9]{64}$", hash)
+	if err != nil {
+		return h, err
+	}
+
+	if !match {
+		return h, fmt.Errorf("given string is not sha256 hash")
+	}
 
 	hashDec, err := hashToDec(hash, logger)
 	if err != nil {

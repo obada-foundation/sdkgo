@@ -135,7 +135,7 @@ func FromString(str string, logger *log.Logger) (*DID, error) {
 
 	fullUSN := base58.Encode([]byte(hashStr))
 
-	h, err := hash.NewFromDID(hashStr, logger)
+	h, err := hash.FromString(hashStr, logger)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create DID: %w", err)
 	}

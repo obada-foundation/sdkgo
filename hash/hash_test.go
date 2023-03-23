@@ -1,9 +1,15 @@
 package hash
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strings"
 	"testing"
+
+	"github.com/obada-foundation/sdkgo/testutil"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewHash(t *testing.T) {
@@ -90,3 +96,65 @@ func TestHashToDecimalConversion(t *testing.T) {
 		}
 	}
 }
+
+type sumHashesTc struct {
+	hashes     []string
+	sum        uint64
+	withLogger bool
+	logger     *log.Logger
+}
+
+func TestSumHashes(t *testing.T) {
+	testCases := []sumHashesTc{
+		{
+			hashes:     make([]string, 0),
+			sum:        uint64(0),
+			withLogger: false,
+			logger:     nil,
+		},
+		{
+			hashes:     make([]string, 0),
+			sum:        uint64(0),
+			withLogger: true,
+			logger:     nil,
+		},
+		{
+			hashes: []string{
+				"7692c3ad3540bb803c020b3aee66cd8887123234ea0c6e7143c0add73ff431ed",
+			},
+			sum:        uint64(1989329837),
+			withLogger: false,
+			logger:     nil,
+		},
+	}
+
+	for _, tc := range testCases {
+		logPrefix := "Hashes sum :: "
+		logger, loggerStr := testutil.TestLogger(logPrefix)
+
+		if tc.withLogger {
+			tc.logger = logger
+		}
+
+		hashes := make([]Hash, 0)
+
+		for _, hashStr := range tc.hashes {
+			h, err := FromString(hashStr, nil)
+			require.NoError(t, err)
+
+			hashes = append(hashes, h)
+		}
+
+		sum := SumHashes(tc.logger, hashes...)
+		assert.Equal(t, tc.sum, sum)
+
+		if tc.withLogger {
+			logs := strings.Split(loggerStr.String(), "\n")
+
+			assert.Equal(t, fmt.Sprint("Hashes sum :: "), logs[0])
+			assert.Equal(t, fmt.Sprintf("<|Computing sum of hashes|> => SumHashes([]) -> ([]) -> %d", sum), logs[1])
+		}
+	}
+}
+
+func TestFromString(t *testing.T) {}
