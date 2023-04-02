@@ -6,6 +6,7 @@ test:
 
 vendor:
 	go mod tidy && go mod vendor
+.PHONY: vendor
 
 coverage:
 	go test ./... -coverprofile=coverage.out && go tool cover -html=coverage.out
