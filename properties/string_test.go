@@ -1,10 +1,11 @@
 package properties
 
 import (
-	"github.com/obada-foundation/sdkgo/hash"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/obada-foundation/sdkgo/hash"
 )
 
 func TestNewStringProperty(t *testing.T) {
@@ -22,13 +23,13 @@ func TestNewStringProperty(t *testing.T) {
 	for _, tc := range testCases {
 		t.Logf("Testing: %q", tc.arg)
 
-		m, _ := NewStringProperty("", tc.arg, logger, false)
+		m, _ := NewStringProperty("", tc.arg, logger)
 
 		if m.GetValue() != tc.arg {
 			t.Fatalf("Expecting to get %q but got %q", tc.arg, m.GetValue())
 		}
 
-		strHash, _ := hash.NewHash([]byte(tc.arg), logger, false)
+		strHash, _ := hash.NewHash([]byte(tc.arg), logger)
 
 		if m.GetHash() != strHash {
 			t.Fatalf("Expecting to get %v but got %v", strHash, m.GetHash())
